@@ -23,18 +23,33 @@
       }"
       :rows="rows"
       :columns="columns"
-      max-height="500px"
       :fixed-header="true"
       @on-row-click="onRowClick"
     >
       <div slot="emptystate">No pending uploads available.</div>
+
+      <template slot="table-row" slot-scope="props">
+        <!-- Customize Photo column -->
+        <span v-if="props.column.field == 'wmlink'">
+          <img width="200px" height="150px" :src="props.row.wmlink" />
+        </span>
+
+        <!-- Customize Type column -->
+        <span v-else-if="props.column.field == 'typeId'">
+          <p v-if="props.row.typeId == '1'">Non-Exclusive</p>
+          <p v-else-if="props.row.typeId == '2'">Exclusive</p>
+        </span>
+
+        <span v-else>
+          {{ props.formattedRow[props.column.field] }}
+        </span>
+      </template>
     </vue-good-table>
 
     <Modal v-model="showModal" title="Upload Details" v-bind="dataModal">
       <h3 style="text-align: center" v-bind="user">
         User: {{ user.fullName }}
       </h3>
-      <h3 style="text-align: center">ID: {{ dataModal.userId }}</h3>
       <h3 style="text-align: center" v-bind="user">Email: {{ user.email }}</h3>
       <ImageLazy
         class="photo"
@@ -63,8 +78,13 @@
       <div class="ph-clear"></div>
     </Modal>
 
-    <Modal v-model="confirmModal" title="Success" style="height: 500px" v-bind="msg">
-      <h3 style="text-align: center">{{msg}}</h3>
+    <Modal
+      v-model="confirmModal"
+      title="Success"
+      style="height: 500px"
+      v-bind="msg"
+    >
+      <h3 style="text-align: center">{{ msg }}</h3>
       <div class="ph-container">
         <div
           style="
@@ -106,20 +126,36 @@ export default {
       //isLoading: false,
       columns: [
         {
+          label: "Photo",
+          field: "wmlink",
+          sortable: false,
+          width: "200px",
+        },
+        {
           label: "Photo ID",
           field: "photoId",
           type: "number",
+          width: "150px",
           sortable: true,
         },
         {
           label: "Photo Name",
           field: "photoName",
+          type: "string",
           sortable: false,
+        },
+        {
+          label: "Type",
+          field: "typeId",
+          type: "string",
+          width: "150px",
+          sortable: true,
         },
         {
           label: "UserID",
           field: "userId",
           sortable: false,
+          hidden: true,
         },
       ],
       rows: [
@@ -181,9 +217,9 @@ export default {
         .then((response) => {
           if (response.status == 200) {
             this.confirmModal = true;
-            this.msg = "Success!";
+            this.msg = "Approved!";
           } else {
-            this.msg = "Error!"
+            this.msg = "Error!";
           }
           console.log(response.status);
         })
@@ -212,7 +248,7 @@ image-lazy {
 .image-lazy-loading {
   filter: blur(5px);
   transform: translateY(1rem);
-  width: 30em;
+  width: 29.6em;
   height: 25em;
   padding-right: 5px;
 }
@@ -221,7 +257,7 @@ image-lazy {
   opacity: 1;
   transform: none;
   filter: none;
-  width: 30em;
+  width: 29.6em;
   height: 25em;
   padding-right: 5px;
 }
