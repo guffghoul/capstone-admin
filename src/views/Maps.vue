@@ -69,16 +69,17 @@
           <projects-table-2 title="Upload List"></projects-table-2>
         </div>
       </div>
-      
     </div>
   </div>
 </template>
 <script>
-import ProjectsTable2 from './Tables/ProjectsTable2.vue';
+import ProjectsTable2 from "./Tables/ProjectsTable4.vue";
+//import VueTinyTabs from "vue-tiny-tabs";
 export default {
   name: "tables",
   components: {
-    ProjectsTable2
+    ProjectsTable2,
+    //"vue-tiny-tabs": VueTinyTabs,
   },
 };
 </script>

@@ -1,8 +1,8 @@
 import axios from "axios";
 
-export const getImages = ({ commit }) => {
+export const getImagesToApprove = ({ commit }) => {
     axios
-        .get("https://capstonerestapi.azurewebsites.net/api/v1/Photo/random")
+        .get("https://capstonerestapi.azurewebsites.net/api/v1/Photo/getToApprove")
         .then((response) => {
             commit("SET_IMAGES", response.data);
         });
