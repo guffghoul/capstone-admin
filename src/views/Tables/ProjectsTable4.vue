@@ -1,5 +1,5 @@
 <template>
-  <div class="card shadow" :class="type === 'dark' ? 'bg-default' : ''">
+  <div class="card shadow" style="padding: 10px" :class="type === 'dark' ? 'bg-default' : ''">
     <div
       class="card-header border-0"
       :class="type === 'dark' ? 'bg-transparent' : ''"
@@ -13,7 +13,7 @@
       </div>
     </div>
 
-    <div><h3 style="text-align: center">Pending Uploads</h3></div>
+    <div style="text-align: center"><h2>Pending Uploads</h2></div>
     <br />
 
     <vue-good-table
@@ -37,6 +37,7 @@
         <!-- Customize Type column -->
         <span v-else-if="props.column.field == 'typeId'">
           <p v-if="props.row.typeId == '1'">Non-Exclusive</p>
+          <p v-if="props.row.typeId == '1'">{{ props.row.photoId }}</p>
           <p v-else-if="props.row.typeId == '2'">Exclusive</p>
         </span>
 
@@ -271,7 +272,7 @@ export default {
       this.dataModal = params.row;
       this.showModal = true;
       //console.log(this.imgData);
-
+      
       // params.row - row object
       // params.pageIndex - index of this row on the current page.
       // params.selected - if selection is enabled this argument

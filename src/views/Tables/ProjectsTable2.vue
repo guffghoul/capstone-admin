@@ -1,158 +1,418 @@
 <template>
-  <div class="card shadow"
-       :class="type === 'dark' ? 'bg-default': ''">
-    <div class="card-header border-0"
-         :class="type === 'dark' ? 'bg-transparent': ''">
+  <div
+    class="card shadow"
+    style="padding: 10px"
+    :class="type === 'dark' ? 'bg-default' : ''"
+  >
+    <div
+      class="card-header border-0"
+      :class="type === 'dark' ? 'bg-transparent' : ''"
+    >
       <div class="row align-items-center">
         <div class="col">
-          <h3 class="mb-0" :class="type === 'dark' ? 'text-white': ''">
-            {{title}}
+          <h3 class="mb-0" :class="type === 'dark' ? 'text-white' : ''">
+            {{ title }}
           </h3>
         </div>
-        <!-- <div class="col text-right">
-          <base-button type="primary" size="sm">See all</base-button>
-        </div> -->
       </div>
     </div>
 
-    <div class="table-responsive">
-      <base-table class="table align-items-center table-flush"
-                  :class="type === 'dark' ? 'table-dark': ''"
-                  :thead-classes="type === 'dark' ? 'thead-dark': 'thead-light'"
-                  tbody-classes="list"
-                  :data="tableData">
-        <template slot="columns">
-          <th>Item</th>
-          <!-- <th>Budget</th> -->
-          <th>Status</th>
-          <th>User</th>
-          <!-- <th>Completion</th> -->
-          <th></th>
-        </template>
-
-        <template slot-scope="{row}">
-          <th scope="row">
-            <div class="media align-items-center">
-              <a href="#" class="avatar rounded-circle mr-3">
-                <img alt="Image placeholder" :src="row.img">
-              </a>
-              <div class="media-body">
-                <span class="name mb-0 text-sm">{{row.title}}</span>
-              </div>
-            </div>
-          </th>
-          <!-- <td class="budget">
-            {{row.budget}}
-          </td> -->
-          <td>
-            <badge class="badge-dot mr-4" :type="row.statusType">
-              <i :class="`bg-${row.statusType}`"></i>
-              <span class="status">{{row.status}}</span>
-            </badge>
-          </td>
-          <td>
-            <div class="avatar-group">
-              <a href="#" class="avatar avatar-sm rounded-circle" data-toggle="tooltip" data-original-title="Ryan Tompson">
-                <img alt="Image placeholder" src="img/theme/team-1-800x800.jpg">
-              </a>
-            </div>
-          </td>
-
-          <!-- <td>
-            <div class="d-flex align-items-center">
-              <span class="completion mr-2">{{row.completion}}%</span>
-              <div>
-                <base-progress :type="row.statusType"
-                               :show-percentage="false"
-                               class="pt-0"
-                               :value="row.completion"/>
-              </div>
-            </div>
-          </td> -->
-
-          <td class="text-right">
-            <base-dropdown class="dropdown"
-                           position="right">
-              <a slot="title" class="btn btn-sm btn-icon-only text-light" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <i class="fas fa-ellipsis-v"></i>
-              </a>
-
-              <template>
-                <a class="dropdown-item" href="#">Action</a>
-                <a class="dropdown-item" href="#">Another action</a>
-                <a class="dropdown-item" href="#">Something else here</a>
-              </template>
-            </base-dropdown>
-          </td>
-
-        </template>
-
-      </base-table>
+    <div style="text-align: center">
+      <h2 style="font-size: 25px; font-family: 'Roboto'">Pending Uploads</h2>
     </div>
+    <br />
 
-    <div class="card-footer d-flex justify-content-end"
-         :class="type === 'dark' ? 'bg-transparent': ''">
-      <base-pagination total="30"></base-pagination>
-    </div>
+    <vue-good-table
+      :pagination-options="{
+        enabled: true,
+        perPage: 5,
+      }"
+      :rows="rows"
+      :columns="columns"
+      :fixed-header="true"
+      @on-row-click="onRowClick"
+      styleClass="vgt-table"
+    >
+      <div slot="emptystate">No pending uploads available.</div>
 
+      <template slot="table-row" slot-scope="props">
+        <!-- Customize Photo column -->
+        <span v-if="props.column.field == 'wmlink'">
+          <img
+            class="img-fit"
+            width="600px"
+            height="400px"
+            :src="props.row.wmlink"
+          />
+        </span>
+
+        <div v-else-if="props.column.field == 'photoName'">
+          <p style="font-size: 22px; font-family: 'Roboto'">
+            Photo Name: {{ props.row.photoName }}
+          </p>
+          <p style="font-size: 22px; font-family: 'Roboto'">
+            Photo ID: {{ props.row.photoId }}
+          </p>
+          <p
+            v-if="props.row.typeId == '1'"
+            style="font-size: 22px; font-family: 'Roboto'"
+          >
+            License Type: Casual
+          </p>
+          <p
+            v-else-if="props.row.typeId == '2'"
+            style="font-size: 22px; font-family: 'Roboto'"
+          >
+            License Type: Exclusive
+          </p>
+          <p style="font-size: 22px; font-family: 'Roboto'">Categories:</p>
+          <h4
+            style="padding-left: 15px; font-size: 20px; font-family: 'Roboto'"
+            v-for="item in props.row.category"
+            :key="item"
+          >
+            &bull; {{ item.categoryName }}
+          </h4>
+        </div>
+
+        <div v-else>
+          {{ props.formattedRow[props.column.field] }}
+        </div>
+      </template>
+    </vue-good-table>
+
+    <Modal v-model="showModal" title="Upload Details" v-bind="dataModal">
+      <h3 style="text-align: center" v-bind="user">
+        User: {{ user.fullName }}
+      </h3>
+      <h3 style="text-align: center" v-bind="user">Email: {{ user.email }}</h3>
+
+      <img
+        :src="dataModal.wmlink"
+        @click="openGallery(0)"
+        style="height: 400px; width: 470px; cursor: pointer"
+      />
+      <h4 style="text-align: center; padding: 15px">
+        Click on image for full size
+      </h4>
+
+      <LightBox
+        ref="lightbox"
+        :showLightBox="false"
+        :showThumbs="false"
+        :media="[
+          {
+            thumb: dataModal.wmlink,
+            src: dataModal.wmlink,
+            srcset: dataModal.wmlink,
+          },
+        ]"
+      >
+        <inner-image-zoom :src="dataModal.wmlink" :zoomSrc="dataModal.wmlink" />
+      </LightBox>
+
+      <div class="ph-container">
+        <button
+          class="btn btn-success"
+          style="margin-left: 55px; width: 150px"
+          v-on:click="approvePhoto(dataModal.photoId)"
+        >
+          <span class="text-nowrap">Approve</span>
+        </button>
+        <button
+          class="btn btn-danger"
+          style="margin-left: 55px; width: 150px"
+          v-on:click="openRejectModal()"
+        >
+          <span class="text-nowrap">Reject</span>
+        </button>
+      </div>
+      <div class="ph-clear"></div>
+    </Modal>
+
+    <Modal
+      v-model="confirmModal"
+      title="Success"
+      style="height: 500px"
+      v-bind="msg"
+    >
+      <h3 style="text-align: center">{{ msg }}</h3>
+      <div class="ph-container">
+        <div
+          style="
+            width: 40%;
+            padding-left: 155px;
+            padding-top: 35px;
+            text-align: center;
+          "
+        >
+          <a href="/maps" class="btn btn-success" style="width: 150px">OK</a>
+        </div>
+      </div>
+    </Modal>
+
+    <Modal v-model="rejectModal" title="Reject reason" style="height: 500px">
+      <h3 style="text-align: center">Reason for Rejection</h3>
+
+      <v-select
+        v-model="selected"
+        :placeholder="rejectReasons[0].reportReason"
+        label="reportReason"
+        :options="rejectReasons"
+        :searchable="false"
+      ></v-select>
+
+      <br />
+      <textarea
+        style="margin-left: 60px; width: 350px; height: 150px"
+        placeholder="Details about the problem..."
+      ></textarea>
+
+      <div class="ph-container">
+        <div
+          style="
+            width: 40%;
+            padding-left: 155px;
+            padding-top: 35px;
+            text-align: center;
+          "
+        >
+          <button
+            class="btn btn-danger"
+            style="width: 150px"
+            v-on:click="rejectPhoto(dataModal.photoId, selected.reportReason)"
+          >
+            <span class="text-nowrap">Reject</span>
+          </button>
+        </div>
+      </div>
+    </Modal>
   </div>
 </template>
+
 <script>
-  export default {
-    name: 'projects-table',
-    props: {
-      type: {
-        type: String
-      },
-      title: String
+import "vue-good-table/dist/vue-good-table.css";
+import { VueGoodTable } from "vue-good-table";
+import axios from "axios";
+import VueModal from "@kouts/vue-modal";
+import "@kouts/vue-modal/dist/vue-modal.css";
+//import ImageLazy from "cube-vue-image-lazy";
+import LightBox from "vue-it-bigger";
+import("vue-it-bigger/dist/vue-it-bigger.min.css");
+import InnerImageZoom from "vue-inner-image-zoom";
+import vSelect from "vue-select";
+import "vue-select/dist/vue-select.css";
+export default {
+  components: {
+    VueGoodTable,
+    Modal: VueModal,
+    //ImageLazy,
+    LightBox,
+    "inner-image-zoom": InnerImageZoom,
+    "v-select": vSelect,
+  },
+  data() {
+    return {
+      //model for reject reasons
+      selected: [],
+      //data for main Modal
+      dataModal: [],
+      //user data from each rows after click
+      user: [],
+      //msg for confirmModal
+      msg: [],
+      //select-box data for rejectModal
+      rejectReasons: [],
+      showModal: false,
+      confirmModal: false,
+      rejectModal: false,
+      loading: false,
+      loaded: false,
+      //isLoading: false,
+      
+      columns: [
+        {
+          label: "Photo",
+          field: "wmlink",
+          sortable: true,
+          width: "600px",
+        },
+        {
+          label: "Photo Details",
+          field: "photoName",
+          type: "string",
+          sortable: false,
+        },
+      ],
+      rows: [],
+    };
+  },
+  methods: {
+    openGallery(index) {
+      this.$refs.lightbox.showImage(index);
     },
-    data() {
-      return {
-        tableData: [
-          {
-            img: 'img/theme/bootstrap.jpg',
-            title: 'Argon Design System',
-            budget: '$2500 USD',
-            status: 'pending',
-            statusType: 'warning',
-            completion: 60
-          },
-          {
-            img: 'img/theme/angular.jpg',
-            title: 'Angular Now UI Kit PRO',
-            budget: '$1800 USD',
-            status: 'pending',
-            statusType: 'warning',
-            completion: 100
-          },
-          {
-            img: 'img/theme/sketch.jpg',
-            title: 'Black Dashboard',
-            budget: '$3150 USD',
-            status: 'rejected',
-            statusType: 'danger',
-            completion: 72
-          },
-          {
-            img: 'img/theme/react.jpg',
-            title: 'React Material Dashboard',
-            budget: '$4400 USD',
-            status: 'approved',
-            statusType: 'success',
-            completion: 90
-          },
-          {
-            img: 'img/theme/vue.jpg',
-            title: 'Vue Paper UI Kit PRO',
-            budget: '$2200 USD',
-            status: 'approved',
-            statusType: 'success',
-            completion: 100
+    onRowClick(params) {
+      //console.log(params.row);
+      this.getUserId(params.row.userId);
+      this.dataModal = params.row;
+      this.showModal = true;
+      //console.log(this.imgData);
+
+      // params.row - row object
+      // params.pageIndex - index of this row on the current page.
+      // params.selected - if selection is enabled this argument
+      // indicates selected or not
+      // params.event - click event
+    },
+    getUserId(id) {
+      axios
+        .get("https://imago.azurewebsites.net/api/v1/User/GetById/" + id)
+        .then((response) => {
+          this.user = response.data;
+          console.log(response);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+    getReportReasons() {
+      axios
+        .get("https://imago.azurewebsites.net/api/v1/Report/GetAllReportReason")
+        .then((response) => {
+          this.rejectReasons = response.data;
+          console.log(response);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+    closeModal() {
+      this.showModal = false;
+    },
+    openRejectModal() {
+      this.showModal = false;
+      this.rejectModal = true;
+    },
+    approvePhoto(id) {
+      this.showModal = false;
+      axios
+        .put("https://imago.azurewebsites.net/api/v1/User/ApprovePhoto/" + id)
+        .then((response) => {
+          if (response.status == 200) {
+            this.confirmModal = true;
+            this.msg = "Photo Approved!";
+          } else {
+            this.confirmModal = true;
+            this.msg = "Error!";
           }
-        ]
-      }
-    }
-  }
+          console.log(response.status);
+        })
+        .catch((error) => {
+          this.confirmModal = true;
+          this.msg = error;
+          console.log(error);
+        });
+    },
+    rejectPhoto(dataId, dataReason) {
+      this.rejectModal = false;
+      axios
+        .put("https://imago.azurewebsites.net/api/v1/User/DeniedPhoto", {
+          id: dataId,
+          reason: dataReason,
+        })
+        .then((response) => {
+          if (response.status == 200) {
+            this.confirmModal = true;
+            this.msg = "Photo Rejected!";
+          } else {
+            this.confirmModal = true;
+            this.msg = "Error!";
+          }
+          console.log(response.status);
+        })
+        .catch((error) => {
+          this.confirmModal = true;
+          this.msg = error;
+          console.log(error);
+        });
+    },
+  },
+  mounted: function () {
+    //preload reasons for v-select component or crash the web
+    this.getReportReasons();
+    axios
+      .get("https://imago.azurewebsites.net/api/v1/Photo/getToApprove")
+      .then((response) => {
+        this.rows = response.data;
+        console.log(response);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  },
+};
 </script>
 <style>
+.ph-button {
+  width: 9em;
+  border-style: solid;
+  border-width: 0px 0px 3px;
+  box-shadow: 0 -1px 0 rgba(255, 255, 255, 0.1) inset;
+  color: #ffffff;
+  border-radius: 6px;
+  cursor: pointer;
+  display: inline-block;
+  font-style: normal;
+  overflow: hidden;
+  text-align: center;
+  text-decoration: none;
+  text-overflow: ellipsis;
+  transition: all 200ms ease-in-out 0s;
+  white-space: nowrap;
+  font-family: "Gotham Rounded A", "Gotham Rounded B", Helvetica, Arial,
+    sans-serif;
+  font-weight: 700;
+  padding: 19px 39px 18px;
+  font-size: 18px;
+}
+.ph-btn-green {
+  border-color: #3ac162;
+  background-color: #5fcf80;
+}
+.ph-btn-green:hover {
+  color: blanchedalmond;
+}
+.ph-btn-green:focus,
+.ph-btn-green:active {
+  background-color: #4bc970;
+  border-color: #3ac162;
+}
+.ph-btn-red {
+  background-color: #ed5a5a !important;
+  border-color: #ea4343 !important;
+}
+.ph-btn-red:hover {
+  color: blanchedalmond;
+}
+.ph-btn-red:focus,
+.ph-btn-red:active {
+  background: none repeat scroll 0 0 #eb4848 !important;
+  border-color: #e83131 !important;
+}
+.ph-container {
+  margin: 0 auto;
+  display: inline;
+}
+
+.ph-float {
+  float: left;
+  width: 40%;
+  padding-left: 65px;
+  padding-top: 25px;
+  text-align: center;
+}
+
+.ph-clear {
+  clear: both;
+}
 </style>

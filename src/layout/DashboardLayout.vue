@@ -11,7 +11,7 @@
             name: 'Dashboard',
             icon: 'ni ni-tv-2 text-primary',
             //path: '/dashboard'
-            path: '/maps'
+            path: '/dashboard'
           }"
         />
 

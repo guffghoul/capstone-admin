@@ -73,7 +73,7 @@
   </div>
 </template>
 <script>
-import ProjectsTable2 from "./Tables/ProjectsTable4.vue";
+import ProjectsTable2 from "./Tables/ProjectsTable2.vue";
 //import VueTinyTabs from "vue-tiny-tabs";
 export default {
   name: "tables",
