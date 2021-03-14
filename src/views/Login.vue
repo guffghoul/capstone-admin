@@ -42,7 +42,7 @@
                                 <span class="text-muted">Remember me</span>
                             </base-checkbox> -->
             <div class="text-center">
-              <base-button type="submit" class="my-4">Sign in</base-button>
+              <button type="submit" class="btn btn-primary">Sign in</button>
             </div>
           </form>
         </div>
@@ -75,11 +75,20 @@ export default {
     login() {
       let username = this.username;
       let password = this.password;
-      this.$store
-        .dispatch("login", { username, password })
-        .then(() => this.$router.push("/"))
-        .catch((err) => console.log(err));
-      this.$store.dispatch("auth");
+      if (username === "" || password === "") {
+        alert("Username and password must not empty");
+      } else {
+        this.$store
+          .dispatch("login", { username, password })
+          .then(() => this.$router.push("/dashboard"))
+          .catch(
+            (err) => (
+              console.log("err:"),
+              console.log(err),
+              alert("The username and / or password is incorrect")
+            )
+          );
+      }
     },
   },
 };

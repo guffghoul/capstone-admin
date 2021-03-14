@@ -66,13 +66,13 @@
             License Type: Exclusive
           </p>
           <p style="font-size: 22px; font-family: 'Roboto'">Categories:</p>
-          <h4
-            style="padding-left: 15px; font-size: 20px; font-family: 'Roboto'"
+          <div
+            style="padding-left: 15px; font-size: 25px;"
             v-for="item in props.row.category"
             :key="item"
           >
-            &bull; {{ item.categoryName }}
-          </h4>
+             <span class="badge badge-pill badge-info">{{ item.categoryName }}</span>
+          </div>
         </div>
 
         <div v-else>

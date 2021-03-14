@@ -1,5 +1,3 @@
-import { mapActions } from "vuex";
-
 export const SET_IMAGES = (state, images) => {
     state.images = images;
 };
