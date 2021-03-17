@@ -146,7 +146,7 @@
             text-align: center;
           "
         >
-          <a href="/maps" class="btn btn-success" style="width: 150px">OK</a>
+          <a href="dashboard" class="btn btn-success" style="width: 150px">OK</a>
         </div>
       </div>
     </Modal>

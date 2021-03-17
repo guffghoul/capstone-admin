@@ -54,7 +54,7 @@ export default new Router({
                     //path: '/maps',
                     //name: 'maps',
                     path: '/dashboard',
-                    name: 'Dashboard',
+                    name: 'dashboard',
                     component: () =>
                         import ( /* webpackChunkName: "demo" */ './views/Maps.vue')
                 },
