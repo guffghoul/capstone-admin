@@ -65,14 +65,20 @@
           >
             License Type: Exclusive
           </p>
+          <p style="font-size: 22px; font-family: 'Roboto'">
+            Description: {{ props.row.description }}
+          </p>
           <p style="font-size: 22px; font-family: 'Roboto'">Categories:</p>
           <div
-            style="padding-left: 15px; font-size: 25px;"
+            style="padding-left: 15px; font-size: 25px"
             v-for="item in props.row.category"
             :key="item"
           >
-             <span class="badge badge-pill badge-info">{{ item.categoryName }}</span>
+            <span class="badge badge-pill badge-info">{{
+              item.categoryName
+            }}</span>
           </div>
+          <br />
         </div>
 
         <div v-else>
@@ -81,7 +87,7 @@
       </template>
     </vue-good-table>
 
-    <Modal v-model="showModal" title="Upload Details" v-bind="dataModal">
+    <Modal v-model="detailsModal" title="Upload Details" v-bind="dataModal">
       <h3 style="text-align: center" v-bind="user">
         User: {{ user.fullName }}
       </h3>
@@ -130,9 +136,51 @@
       <div class="ph-clear"></div>
     </Modal>
 
+    <Modal v-model="chkSimilarModal" title="Similar Details" v-bind="chkSimilar" enableClose=false>
+      <div style="height: 620px">
+        <h2 style="text-align: center; padding: 15px">
+          Detected Photo With Similarity!
+        </h2>
+
+        <h3 style="text-align: center">Photo Name: {{ chkSimilar.photoName }}</h3>
+
+        <img
+        :src="chkSimilar.wmlink"
+        @click="openGallery(0)"
+        style="height: 400px; width: 470px; cursor: pointer"
+      />
+      <h4 style="text-align: center; padding: 15px">
+        Click on image for full size
+      </h4>
+
+      <LightBox
+        ref="lightbox"
+        :showLightBox="false"
+        :showThumbs="false"
+        :media="[
+          {
+            thumb: chkSimilar.wmlink,
+            src: chkSimilar.wmlink,
+            srcset: chkSimilar.wmlink,
+          },
+        ]"
+      >
+        <inner-image-zoom :src="chkSimilar.wmlink" :zoomSrc="chkSimilar.wmlink" />
+      </LightBox>
+
+      <button
+          class="btn btn-danger"
+          style="margin-left: 33%; width: 150px"
+          v-on:click="closeModal()"
+        >
+          <span class="text-nowrap">Reject</span>
+        </button>
+      </div>
+    </Modal>
+
     <Modal
       v-model="confirmModal"
-      title="Success"
+      title="Result"
       style="height: 500px"
       v-bind="msg"
     >
@@ -146,7 +194,13 @@
             text-align: center;
           "
         >
-          <a href="dashboard" class="btn btn-success" style="width: 150px">OK</a>
+          <div
+            class="btn btn-success"
+            style="width: 150px"
+            @click="reloadPage()"
+          >
+            OK
+          </div>
         </div>
       </div>
     </Modal>
@@ -155,15 +209,15 @@
       <h3 style="text-align: center">Reason for Rejection</h3>
 
       <v-select
-        v-model="selected"
+        v-model="reasons"
         :placeholder="rejectReasons[0].reportReason"
         label="reportReason"
         :options="rejectReasons"
         :searchable="false"
       ></v-select>
-
       <br />
       <textarea
+        v-model="rejectDesc"
         style="margin-left: 60px; width: 350px; height: 150px"
         placeholder="Details about the problem..."
       ></textarea>
@@ -180,7 +234,9 @@
           <button
             class="btn btn-danger"
             style="width: 150px"
-            v-on:click="rejectPhoto(dataModal.photoId, selected.reportReason)"
+            v-on:click="
+              rejectPhoto(dataModal.photoId, reasons.reportReason, rejectDesc)
+            "
           >
             <span class="text-nowrap">Reject</span>
           </button>
@@ -202,8 +258,10 @@ import("vue-it-bigger/dist/vue-it-bigger.min.css");
 import InnerImageZoom from "vue-inner-image-zoom";
 import vSelect from "vue-select";
 import "vue-select/dist/vue-select.css";
+//import modal from "@/components/Modal.vue";
 export default {
   components: {
+    //modal,
     VueGoodTable,
     Modal: VueModal,
     //ImageLazy,
@@ -214,22 +272,27 @@ export default {
   data() {
     return {
       //model for reject reasons
-      selected: [],
+      reasons: [],
+      //model for reject desc
+      rejectDesc: [],
       //data for main Modal
       dataModal: [],
+      //model for chk similar
+      chkSimilar: [],
       //user data from each rows after click
       user: [],
       //msg for confirmModal
       msg: [],
       //select-box data for rejectModal
       rejectReasons: [],
-      showModal: false,
+      detailsModal: false,
       confirmModal: false,
       rejectModal: false,
+      chkSimilarModal: false,
       loading: false,
       loaded: false,
       //isLoading: false,
-      
+
       columns: [
         {
           label: "Photo",
@@ -248,15 +311,19 @@ export default {
     };
   },
   methods: {
+    reloadPage() {
+      window.location.reload();
+    },
     openGallery(index) {
       this.$refs.lightbox.showImage(index);
     },
     onRowClick(params) {
       //console.log(params.row);
       this.getUserId(params.row.userId);
+      //check similar photo first
+      this.checkSimilarPhoto(params.row.photoId);
       this.dataModal = params.row;
-      this.showModal = true;
-      //console.log(this.imgData);
+      this.detailsModal = true;
 
       // params.row - row object
       // params.pageIndex - index of this row on the current page.
@@ -280,21 +347,26 @@ export default {
         .get("https://imago.azurewebsites.net/api/v1/Report/GetAllReportReason")
         .then((response) => {
           this.rejectReasons = response.data;
-          console.log(response);
+          //console.log(response);
         })
         .catch((error) => {
           console.log(error);
         });
     },
     closeModal() {
-      this.showModal = false;
+      //this.detailsModal = false;
+      if (this.detailsModal == true && this.chkSimilarModal == false) {
+        this.detailsModal = false;
+      } else if (this.detailsModal == true && this.chkSimilarModal == true) {
+        this.chkSimilarModal = false;
+      }
     },
     openRejectModal() {
-      this.showModal = false;
+      this.detailsModal = false;
       this.rejectModal = true;
     },
     approvePhoto(id) {
-      this.showModal = false;
+      this.detailsModal = false;
       axios
         .put("https://imago.azurewebsites.net/api/v1/User/ApprovePhoto/" + id)
         .then((response) => {
@@ -313,12 +385,13 @@ export default {
           console.log(error);
         });
     },
-    rejectPhoto(dataId, dataReason) {
+    rejectPhoto(dataId, rejectReason, rejectDescription) {
       this.rejectModal = false;
       axios
         .put("https://imago.azurewebsites.net/api/v1/User/DeniedPhoto", {
           id: dataId,
-          reason: dataReason,
+          reason: rejectReason,
+          description: rejectDescription,
         })
         .then((response) => {
           if (response.status == 200) {
@@ -333,6 +406,29 @@ export default {
         .catch((error) => {
           this.confirmModal = true;
           this.msg = error;
+          console.log(error);
+        });
+    },
+    checkSimilarPhoto(id) {
+      
+      axios
+        .get(
+          "https://imago.azurewebsites.net/api/v1/Photo/GetSimilarPhoto/" + id
+        )
+        .then((response) => {
+          if (response.status == 200) {
+            this.chkSimilar = response.data;
+            alert("Dectected Similar Photo!");
+            this.chkSimilarModal = true;
+            console.log(response.data);
+          } else if (response.status == 400) {
+            alert("Check Similar Passed!");
+            console.log(response.data);
+          }
+          console.log(response);
+        })
+        .catch((error) => {
+          alert("Check Similar Passed!");
           console.log(error);
         });
     },
