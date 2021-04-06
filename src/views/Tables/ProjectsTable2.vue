@@ -456,52 +456,6 @@ export default {
 };
 </script>
 <style>
-.ph-button {
-  width: 9em;
-  border-style: solid;
-  border-width: 0px 0px 3px;
-  box-shadow: 0 -1px 0 rgba(255, 255, 255, 0.1) inset;
-  color: #ffffff;
-  border-radius: 6px;
-  cursor: pointer;
-  display: inline-block;
-  font-style: normal;
-  overflow: hidden;
-  text-align: center;
-  text-decoration: none;
-  text-overflow: ellipsis;
-  transition: all 200ms ease-in-out 0s;
-  white-space: nowrap;
-  font-family: "Gotham Rounded A", "Gotham Rounded B", Helvetica, Arial,
-    sans-serif;
-  font-weight: 700;
-  padding: 19px 39px 18px;
-  font-size: 18px;
-}
-.ph-btn-green {
-  border-color: #3ac162;
-  background-color: #5fcf80;
-}
-.ph-btn-green:hover {
-  color: blanchedalmond;
-}
-.ph-btn-green:focus,
-.ph-btn-green:active {
-  background-color: #4bc970;
-  border-color: #3ac162;
-}
-.ph-btn-red {
-  background-color: #ed5a5a !important;
-  border-color: #ea4343 !important;
-}
-.ph-btn-red:hover {
-  color: blanchedalmond;
-}
-.ph-btn-red:focus,
-.ph-btn-red:active {
-  background: none repeat scroll 0 0 #eb4848 !important;
-  border-color: #e83131 !important;
-}
 .ph-container {
   margin: 0 auto;
   display: inline;
