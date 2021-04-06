@@ -3,6 +3,7 @@
     class="section section-shaped section-lg my-0"
     style="background-image: url('img/theme/header-background.jpg')"
   >
+  <!-- Header -->
   <div class="header bg-gradient-success py-7 py-lg-5">
       <div class="container">
         <div class="header-body text-center mb-7">
@@ -15,8 +16,8 @@
           </div>
         </div>
       </div>
-     
     </div>
+    <!-- Header -->
     <div class="container" >
       <div class="row justify-content-center">
         <div class="col-lg-5">
@@ -74,6 +75,7 @@
         </div>
       </div>
     </div>
+    <!-- Footer -->
     <footer class="py-5">
       <div class="container">
         <div class="row align-items-center justify-content-xl-between">
