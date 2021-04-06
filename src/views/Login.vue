@@ -1,72 +1,71 @@
 <template>
-  <div class="row justify-content-center">
-    <div class="col-lg-5 col-md-7">
-      <div class="card bg-secondary shadow border-0">
-        <!-- <div class="card-header bg-transparent pb-5">
-                        <div class="text-muted text-center mt-2 mb-3"><small>Sign in with</small></div>
-                        <div class="btn-wrapper text-center">
-                            <a href="#" class="btn btn-neutral btn-icon">
-                                <span class="btn-inner--icon"><img src="img/icons/common/github.svg"></span>
-                                <span class="btn-inner--text">Github</span>
-                            </a>
-                            <a href="#" class="btn btn-neutral btn-icon">
-                                <span class="btn-inner--icon"><img src="img/icons/common/google.svg"></span>
-                                <span class="btn-inner--text">Google</span>
-                            </a>
-                        </div>
-                    </div> -->
-        <div class="card-body px-lg-5 py-lg-5">
-          <!-- <div class="text-center text-muted mb-4">
-                            <small>Or sign in with credentials</small>
-                        </div> -->
-          <div class="text-muted text-center mt-1 mb-3"><h2>Login Form</h2></div>
-          <form role="form" @submit.prevent="login">
-            <base-input
-              class="input-group-alternative mb-3"
-              placeholder="Username"
-              addon-left-icon="ni ni-email-83"
-              v-model="username"
-            >
-            </base-input>
-
-            <base-input
-              class="input-group-alternative"
-              placeholder="Password"
-              type="password"
-              addon-left-icon="ni ni-lock-circle-open"
-              v-model="password"
-            >
-            </base-input>
-
-            <!-- <base-checkbox class="custom-control-alternative">
-                                <span class="text-muted">Remember me</span>
-                            </base-checkbox> -->
-            <div class="text-center">
-              <button type="submit" class="btn btn-primary">Sign in</button>
+  <section
+    class="section section-shaped section-lg my-0"
+    style="background-image: url('img/theme/header-background.jpg')"
+  >
+    <div class="container" >
+      <div class="row justify-content-center">
+        <div class="col-lg-5">
+          <card
+            type="secondary"
+            shadow
+            header-classes="bg-white pb-5"
+            body-classes="px-lg-5 py-lg-5"
+            class="border-0"
+            style="background-color:#FFFFFF"
+          >
+            <template>
+              <div class="text-center text-muted mb-4">
+                <p class="lead text-muted">Welcome to IMAGO</p>
+              </div>
+              <form role="form" @submit.prevent="login">
+                <base-input
+                  v-model="username"
+                  alternative
+                  class="mb-3"
+                  placeholder="Username"
+                  addon-left-icon="ni ni-email-83"
+                >
+                </base-input>
+                <base-input
+                  v-model="password"
+                  alternative
+                  type="password"
+                  placeholder="Password"
+                  addon-left-icon="ni ni-lock-circle-open"
+                >
+                </base-input>
+                <div class="row justify-content-center">
+                  <button class="login-button" type="submit">Sign in</button>
+                </div>
+              </form>
+            </template>
+          </card>
+          <div class="row mt-3">
+            <div class="col-6">
+              <router-link to="/requestchangepassword" title="Register">
+                <a href="#" style="color:#0886DE">
+                  <small>Forgot password?</small>
+                </a>
+              </router-link>
             </div>
-          </form>
+            <div class="col-6 text-right">
+              <router-link to="/register" title="Register">
+                 <a href="#" style="color:#0886DE">
+                  <small>Create new account</small>
+                </a>
+              </router-link>
+            </div>
+          </div>
         </div>
       </div>
-      <!-- <div class="row mt-3">
-                    <div class="col-6">
-                        <a href="#" class="text-light"><small>Forgot password?</small></a>
-                    </div>
-                    <div class="col-6 text-right">
-                        <router-link to="/register" class="text-light"><small>Create new account</small></router-link>
-                    </div>
-                </div> -->
     </div>
-  </div>
+  </section>
 </template>
 <script>
 export default {
-  //name: "login",
   data() {
     return {
-      // model: {
-      //   email: '',
-      //   password: ''
-      // }
       username: "",
       password: "",
     };
@@ -83,15 +82,33 @@ export default {
           .then(() => this.$router.push("/dashboard"))
           .catch(
             (err) => (
-              console.log("err:"),
               console.log(err),
               alert("The username and / or password is incorrect")
             )
           );
+        this.$store.dispatch("auth");
       }
     },
   },
 };
 </script>
-<style>
+<style scoped>
+.section{
+  height: 100%;
+ 
+}
+
+.login-button {
+  background-color: #525f7f;
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  margin: 4px 2px;
+  cursor: pointer;
+  font-size: 12px;
+  border-radius: 12px;
+}
 </style>

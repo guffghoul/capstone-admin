@@ -6,8 +6,8 @@
             <navbar-toggle-button @click.native="showSidebar">
                 <span class="navbar-toggler-icon"></span>
             </navbar-toggle-button>
-            <router-link class="navbar-brand" to="/">
-                <img :src="logo" class="navbar-brand-img" alt="...">
+            <router-link class="navbar-brand" to="/dashboard">
+                <p class="nav-title">Imago</p>
             </router-link>
 
             <slot name="mobile-right">
@@ -148,3 +148,12 @@
     }
   };
 </script>
+
+<style scoped>
+  .nav-title {
+  font-family: Garamond, serif;
+  font-size: 28px;
+  font-weight: bold;
+  outline: none;
+}
+</style>

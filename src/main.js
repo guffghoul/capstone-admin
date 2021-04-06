@@ -21,9 +21,10 @@ import router from './router'
 import store from './store'
 import './registerServiceWorker'
 import ArgonDashboard from './plugins/argon-dashboard'
+import Vuex from 'vuex'
 
 Vue.config.productionTip = false
-
+Vue.use(Vuex)
 Vue.use(ArgonDashboard)
 new Vue({
     router,

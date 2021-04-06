@@ -18,11 +18,11 @@
     </div>
 
     <div style="text-align: center">
-      <h2 style="font-size: 25px; font-family: 'Roboto'">Pending Uploads</h2>
+      <h2 style="font-size: 25px; font-family: 'Roboto'" v-if="isLoggedIn">Pending Uploads</h2>
     </div>
     <br />
 
-    <vue-good-table
+    <vue-good-table v-if="isLoggedIn"
       :pagination-options="{
         enabled: true,
         perPage: 5,
@@ -86,7 +86,7 @@
         </div>
       </template>
     </vue-good-table>
-
+    <div v-else><unauthorized/></div>
     <Modal v-model="detailsModal" title="Upload Details" v-bind="dataModal">
       <h3 style="text-align: center" v-bind="user">
         User: {{ user.fullName }}
@@ -258,12 +258,14 @@ import("vue-it-bigger/dist/vue-it-bigger.min.css");
 import InnerImageZoom from "vue-inner-image-zoom";
 import vSelect from "vue-select";
 import "vue-select/dist/vue-select.css";
+import Unauthorized from "../Unauthorized.vue"
 //import modal from "@/components/Modal.vue";
 export default {
   components: {
     //modal,
     VueGoodTable,
     Modal: VueModal,
+    Unauthorized,
     //ImageLazy,
     LightBox,
     "inner-image-zoom": InnerImageZoom,
@@ -309,6 +311,11 @@ export default {
       ],
       rows: [],
     };
+  },
+  computed:{
+     isLoggedIn() {
+      return this.$store.getters.isLoggedIn;
+    },
   },
   methods: {
     reloadPage() {
