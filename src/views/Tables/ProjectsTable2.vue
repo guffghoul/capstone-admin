@@ -425,17 +425,21 @@ export default {
         .then((response) => {
           if (response.status == 200) {
             this.chkSimilar = response.data;
-            alert("Dectected Similar Photo!");
-            this.chkSimilarModal = true;
-            console.log(response.data);
+            // alert("Dectected Similar Photo!");
+            // this.chkSimilarModal = true;
+            // console.log(response.data);
+            this.$alert('Detect Similar Photo!', 'Error', 'error').then(() =>
+            this.chkSimilarModal = true);
           } else if (response.status == 400) {
-            alert("Check Similar Passed!");
-            console.log(response.data);
+            // alert("Check Similar Passed!");
+            // console.log(response.data);
+            this.$alert('No Similar Photo Found!', 'Success', 'success');
           }
           console.log(response);
         })
         .catch((error) => {
-          alert("Check Similar Passed!");
+          // alert("Check Similar Passed!");
+          this.$alert("No Similar Photo Found!", 'Success', 'success');
           console.log(error);
         });
     },

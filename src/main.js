@@ -22,10 +22,12 @@ import store from './store'
 import './registerServiceWorker'
 import ArgonDashboard from './plugins/argon-dashboard'
 import Vuex from 'vuex'
+import VueSimpleAlert from "vue-simple-alert"
 
 Vue.config.productionTip = false
 Vue.use(Vuex)
 Vue.use(ArgonDashboard)
+Vue.use(VueSimpleAlert)
 new Vue({
     router,
     store,
