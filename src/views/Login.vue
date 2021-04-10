@@ -4,7 +4,7 @@
     style="background-image: url('img/theme/header-background.jpg')"
   >
   <!-- Header -->
-  <div class="header bg-gradient-success py-7 py-lg-5">
+  <div class="header py-7 py-lg-5">
       <div class="container">
         <div class="header-body text-center mb-7">
           <div class="row justify-content-center">
