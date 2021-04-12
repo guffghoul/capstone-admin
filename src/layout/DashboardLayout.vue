@@ -2,8 +2,8 @@
   <div class="wrapper" :class="{ 'nav-open': $sidebar.showSidebar }">
     <side-bar
       :background-color="sidebarBackground"
-      short-title="Argon"
-      title="Argon"
+      short-title="Imago"
+      title="Imago"
     >
       <template slot="links">
         <sidebar-item
@@ -78,7 +78,7 @@ export default {
     },
     logout() {
       this.$store.dispatch("logout").then(() => {
-        this.$router.push("/login");
+        this.$router.push("/");
       });
     },
   },

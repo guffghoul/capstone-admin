@@ -19,7 +19,17 @@
       </div> -->
     </form>
     <ul class="navbar-nav align-items-center d-none d-md-flex">
-      <li class="nav-item dropdown">
+
+      <div class="media align-items-center" slot="title">
+            <span class="avatar avatar-sm rounded-circle">
+              <img alt="Image placeholder" src="img/theme/admin.png" />
+            </span>
+            <div class="media-body ml-2 d-none d-lg-block">
+              <span class="mb-0 text-sm font-weight-bold">{{user.fullName}}</span>
+            </div>
+          </div>
+
+      <!-- <li class="nav-item dropdown">
         <base-dropdown class="nav-link pr-0">
           <div class="media align-items-center" slot="title">
             <span class="avatar avatar-sm rounded-circle">
@@ -51,17 +61,13 @@
               <span>Support</span>
             </router-link>
             <div class="dropdown-divider"></div>
-            <!-- <router-link to="/profile" class="dropdown-item">
-              <i class="ni ni-user-run"></i>
-              <span>Logout</span>
-            </router-link> -->
             <a class="dropdown-item" @click="logout">
               <i class="ni ni-user-run"></i>
               <span class="nav-link-inner--text">Logout</span>
             </a>
           </template>
         </base-dropdown>
-      </li>
+      </li> -->
     </ul>
   </base-nav>
 </template>
@@ -98,7 +104,7 @@ export default {
     },
     logout() {
       this.$store.dispatch("logout").then(() => {
-        this.$router.push("/login");
+        this.$router.push("/");
       });
     },
   },

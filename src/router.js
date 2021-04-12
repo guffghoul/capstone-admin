@@ -4,69 +4,75 @@ import DashboardLayout from '@/layout/DashboardLayout'
 // import AuthLayout from '@/layout/AuthLayout'
 import Login from "./views/Login.vue"
 // import Dashboard from './views/Dashboard.vue'
+import Unauthorized from './views/Unauthorized.vue'
 Vue.use(Router)
 
 export default new Router({
     linkExactActiveClass: 'active',
     routes: [
         {
-            path: "/login",
+            path: "/",
             name: "login",
             components: {
                 default: Login,
             }
         },
-  
-    {
-        path: '/',
-        redirect: 'dashboard',
-        //redirect: 'maps',
-        component: DashboardLayout,
-        children: [
-            // {
-            //   path: '/dashboard',
-            //   name: 'dashboard',
-            //   // route level code-splitting
-            //   // this generates a separate chunk (about.[hash].js) for this route
-            //   // which is lazy-loaded when the route is visited.
-            //   component: () => import(/* webpackChunkName: "demo" */ './views/Dashboard.vue')
-            // },
-            {
-                path: '/icons',
-                name: 'icons',
-                component: () =>
-                    import( /* webpackChunkName: "demo" */ './views/Icons.vue')
-            },
-            {
-                path: '/profile',
-                name: 'profile',
-                component: () =>
-                    import( /* webpackChunkName: "demo" */ './views/UserProfile.vue')
-            },
-            {
-                //path: '/maps',
-                //name: 'maps',
-                path: '/dashboard',
-                name: 'dashboard',
-                component: () =>
-                    import( /* webpackChunkName: "demo" */ './views/Maps.vue')
-            },
-            {
-                path: '/tables',
-                name: 'tables',
-                component: () =>
-                    import( /* webpackChunkName: "demo" */ './views/Tables.vue')
-            }
-        ]
-    },
-    // {
-    //     path: "/dashboard",
-    //     name: "dashboard",
-    //     components: {
-    //              Dashboard,
-          
-    //     }
-    // },
-    
+
+        {
+            path: '/unauthorized',
+            name: 'unauthorized',
+            component: Unauthorized,
+        },
+
+        {
+            path: '/',
+            redirect: 'dashboard',
+            component: DashboardLayout,
+            children: [
+                // {
+                //   path: '/dashboard',
+                //   name: 'dashboard',
+                //   // route level code-splitting
+                //   // this generates a separate chunk (about.[hash].js) for this route
+                //   // which is lazy-loaded when the route is visited.
+                //   component: () => import(/* webpackChunkName: "demo" */ './views/Dashboard.vue')
+                // },
+                {
+                    path: '/icons',
+                    name: 'icons',
+                    component: () =>
+                        import( /* webpackChunkName: "demo" */ './views/Icons.vue')
+                },
+                {
+                    path: '/profile',
+                    name: 'profile',
+                    component: () =>
+                        import( /* webpackChunkName: "demo" */ './views/UserProfile.vue')
+                },
+                {
+                    //path: '/maps',
+                    //name: 'maps',
+                    path: '/dashboard',
+                    name: 'dashboard',
+                    component: () =>
+                        import( /* webpackChunkName: "demo" */ './views/Maps.vue')
+                },
+                {
+                    path: '/tables',
+                    name: 'tables',
+                    component: () =>
+                        import( /* webpackChunkName: "demo" */ './views/Tables.vue')
+                }
+            ]
+        },
+        // {
+        //     path: "/dashboard",
+        //     name: "dashboard",
+        //     components: {
+        //              Dashboard,
+
+        //     }
+        // },
+
     ]
 })

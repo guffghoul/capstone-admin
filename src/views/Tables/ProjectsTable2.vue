@@ -18,11 +18,13 @@
     </div>
 
     <div style="text-align: center">
-      <h2 style="font-size: 25px; font-family: 'Roboto'" v-if="isLoggedIn">Pending Uploads</h2>
+      <h2 style="font-size: 25px; font-family: 'Roboto'">
+        Pending Uploads
+      </h2>
     </div>
     <br />
 
-    <vue-good-table v-if="isLoggedIn"
+    <vue-good-table
       :pagination-options="{
         enabled: true,
         perPage: 5,
@@ -86,7 +88,7 @@
         </div>
       </template>
     </vue-good-table>
-    <div v-else><unauthorized/></div>
+    
     <Modal v-model="detailsModal" title="Upload Details" v-bind="dataModal">
       <h3 style="text-align: center" v-bind="user">
         User: {{ user.fullName }}
@@ -136,39 +138,49 @@
       <div class="ph-clear"></div>
     </Modal>
 
-    <Modal v-model="chkSimilarModal" title="Similar Details" v-bind="chkSimilar" enableClose=false>
+    <Modal
+      v-model="chkSimilarModal"
+      title="Similar Details"
+      v-bind="chkSimilar"
+      enableClose="false"
+    >
       <div style="height: 620px">
         <h2 style="text-align: center; padding: 15px">
           Detected Photo With Similarity!
         </h2>
 
-        <h3 style="text-align: center">Photo Name: {{ chkSimilar.photoName }}</h3>
+        <h3 style="text-align: center">
+          Photo Name: {{ chkSimilar.photoName }}
+        </h3>
 
         <img
-        :src="chkSimilar.wmlink"
-        @click="openGallery(0)"
-        style="height: 400px; width: 470px; cursor: pointer"
-      />
-      <h4 style="text-align: center; padding: 15px">
-        Click on image for full size
-      </h4>
+          :src="chkSimilar.wmlink"
+          @click="openGallery(0)"
+          style="height: 400px; width: 470px; cursor: pointer"
+        />
+        <h4 style="text-align: center; padding: 15px">
+          Click on image for full size
+        </h4>
 
-      <LightBox
-        ref="lightbox"
-        :showLightBox="false"
-        :showThumbs="false"
-        :media="[
-          {
-            thumb: chkSimilar.wmlink,
-            src: chkSimilar.wmlink,
-            srcset: chkSimilar.wmlink,
-          },
-        ]"
-      >
-        <inner-image-zoom :src="chkSimilar.wmlink" :zoomSrc="chkSimilar.wmlink" />
-      </LightBox>
+        <LightBox
+          ref="lightbox"
+          :showLightBox="false"
+          :showThumbs="false"
+          :media="[
+            {
+              thumb: chkSimilar.wmlink,
+              src: chkSimilar.wmlink,
+              srcset: chkSimilar.wmlink,
+            },
+          ]"
+        >
+          <inner-image-zoom
+            :src="chkSimilar.wmlink"
+            :zoomSrc="chkSimilar.wmlink"
+          />
+        </LightBox>
 
-      <button
+        <button
           class="btn btn-danger"
           style="margin-left: 33%; width: 150px"
           v-on:click="closeModal()"
@@ -258,14 +270,14 @@ import("vue-it-bigger/dist/vue-it-bigger.min.css");
 import InnerImageZoom from "vue-inner-image-zoom";
 import vSelect from "vue-select";
 import "vue-select/dist/vue-select.css";
-import Unauthorized from "../Unauthorized.vue"
+// import Unauthorized from "../Unauthorized.vue";
 //import modal from "@/components/Modal.vue";
 export default {
   components: {
     //modal,
     VueGoodTable,
     Modal: VueModal,
-    Unauthorized,
+    // Unauthorized,
     //ImageLazy,
     LightBox,
     "inner-image-zoom": InnerImageZoom,
@@ -312,8 +324,8 @@ export default {
       rows: [],
     };
   },
-  computed:{
-     isLoggedIn() {
+  computed: {
+    isLoggedIn() {
       return this.$store.getters.isLoggedIn;
     },
   },
@@ -417,7 +429,6 @@ export default {
         });
     },
     checkSimilarPhoto(id) {
-      
       axios
         .get(
           "https://imago.azurewebsites.net/api/v1/Photo/GetSimilarPhoto/" + id
@@ -428,18 +439,19 @@ export default {
             // alert("Dectected Similar Photo!");
             // this.chkSimilarModal = true;
             // console.log(response.data);
-            this.$alert('Detect Similar Photo!', 'Error', 'error').then(() =>
-            this.chkSimilarModal = true);
+            this.$alert("Detect Similar Photo!", "Error", "error").then(
+              () => (this.chkSimilarModal = true)
+            );
           } else if (response.status == 400) {
             // alert("Check Similar Passed!");
             // console.log(response.data);
-            this.$alert('No Similar Photo Found!', 'Success', 'success');
+            this.$alert("No Similar Photo Found!", "Success", "success");
           }
           console.log(response);
         })
         .catch((error) => {
           // alert("Check Similar Passed!");
-          this.$alert("No Similar Photo Found!", 'Success', 'success');
+          this.$alert("No Similar Photo Found!", "Success", "success");
           console.log(error);
         });
     },
@@ -447,6 +459,10 @@ export default {
   mounted: function () {
     //preload reasons for v-select component or crash the web
     this.getReportReasons();
+    let isLoggedIn = this.$store.getters.isLoggedIn;
+    if(isLoggedIn == false){
+      this.$router.push('/unauthorized');
+    } else {
     axios
       .get("https://imago.azurewebsites.net/api/v1/Photo/getToApprove")
       .then((response) => {
@@ -456,7 +472,7 @@ export default {
       .catch((error) => {
         console.log(error);
       });
-  },
+  }},
 };
 </script>
 <style>
