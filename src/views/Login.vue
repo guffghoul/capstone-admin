@@ -4,9 +4,9 @@
     style="background-image: url('img/theme/header-background.jpg')"
   >
   <!-- Header -->
-  <div class="header py-7 py-lg-5">
+  <div class="header py-7 py-lg-7">
       <div class="container">
-        <div class="header-body text-center mb-7">
+        <div class="header-body text-center mb-6">
           <div class="row justify-content-center">
             <!-- <div class="col-lg-5 col-md-6">
                             <h1 class="text-white">Welcome!</h1>
@@ -31,7 +31,7 @@
           >
             <template>
               <div class="text-center text-muted mb-4">
-                <p class="lead text-muted">Welcome to IMAGO</p>
+                <p class="lead text-muted">Welcome to IMAGO for Admin</p>
               </div>
               <form role="form" @submit.prevent="login">
                 <base-input
@@ -64,13 +64,13 @@
                 </a>
               </router-link>
             </div>
-            <div class="col-6 text-right">
+            <!-- <div class="col-6 text-right">
               <router-link to="/register" title="Register">
                  <a href="#" style="color:#0886DE">
                   <small>Create new account</small>
                 </a>
               </router-link>
-            </div>
+            </div> -->
           </div>
         </div>
       </div>
@@ -83,14 +83,14 @@
             <div class="copyright text-center text-xl-left text-muted">
               &copy; {{ year }}
               <a
-                href="https://www.creative-tim.com"
+                href=""
                 class="font-weight-bold ml-1"
                 target="_blank"
-                >Creative Tim</a
+                >IMAGO</a
               >
             </div>
           </div>
-          <div class="col-xl-6">
+          <!-- <div class="col-xl-6">
             <ul
               class="nav nav-footer justify-content-center justify-content-xl-end"
             >
@@ -127,7 +127,7 @@
                 >
               </li>
             </ul>
-          </div>
+          </div> -->
         </div>
       </div>
     </footer>

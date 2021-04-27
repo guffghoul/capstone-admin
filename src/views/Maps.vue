@@ -66,19 +66,19 @@
     <div class="container-fluid mt--7">
       <div class="row">
         <div class="col">
-          <projects-table-2 title="Upload List"></projects-table-2>
+          <projects-table-4 title="Pending Uploads"></projects-table-4>
         </div>
       </div>
     </div>
   </div>
 </template>
 <script>
-import ProjectsTable2 from "./Tables/ProjectsTable2.vue";
+import ProjectsTable4 from "./Tables/ProjectsTable4.vue";
 //import VueTinyTabs from "vue-tiny-tabs";
 export default {
   name: "tables",
   components: {
-    ProjectsTable2,
+    ProjectsTable4,
     //"vue-tiny-tabs": VueTinyTabs,
   },
 };

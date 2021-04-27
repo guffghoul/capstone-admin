@@ -3,7 +3,7 @@
     <side-bar
       :background-color="sidebarBackground"
       short-title="Imago"
-      title="Imago"
+      title="Imago for Admin"
     >
       <template slot="links">
         <sidebar-item
@@ -15,13 +15,13 @@
           }"
         />
 
-        <sidebar-item
+        <!-- <sidebar-item
           :link="{
             name: 'Reports',
             icon: 'ni ni-bullet-list-67 text-red',
             path: '/tables',
           }"
-        />
+        /> -->
         <!-- <sidebar-item :link="{name: 'Icons', icon: 'ni ni-planet text-blue', path: '/icons'}"/>
         <sidebar-item :link="{name: 'Maps', icon: 'ni ni-pin-3 text-orange', path: '/maps'}"/>
         <sidebar-item :link="{name: 'User Profile', icon: 'ni ni-single-02 text-yellow', path: '/profile'}"/>
@@ -29,7 +29,7 @@
          <sidebar-item v-if="!isLoggedIn" :link="{name: 'Login', icon: 'ni ni-key-25 text-info', path: '/login'}"/>
           <a class="nav-link nav-link-icon" @click="logout" v-if="isLoggedIn">
             <i class="ni ni-user-run"></i>
-            <span class="nav-link-inner--text">Sign out</span>
+            <span style="cursor: pointer" class="nav-link-inner--text">Sign out</span>
           </a>
         
       </template>

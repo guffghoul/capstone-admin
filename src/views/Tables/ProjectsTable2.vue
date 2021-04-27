@@ -352,7 +352,7 @@ export default {
     },
     getUserId(id) {
       axios
-        .get("https://imago.azurewebsites.net/api/v1/User/GetById/" + id)
+        .get("https://capstoneprojectapi20210418160622.azurewebsites.net/api/v1/User/GetById/" + id)
         .then((response) => {
           this.user = response.data;
           console.log(response);
@@ -363,7 +363,7 @@ export default {
     },
     getReportReasons() {
       axios
-        .get("https://imago.azurewebsites.net/api/v1/Report/GetAllReportReason")
+        .get("https://capstoneprojectapi20210418160622.azurewebsites.net/api/v1/Report/GetAllReportReason")
         .then((response) => {
           this.rejectReasons = response.data;
           //console.log(response);
@@ -387,7 +387,7 @@ export default {
     approvePhoto(id) {
       this.detailsModal = false;
       axios
-        .put("https://imago.azurewebsites.net/api/v1/User/ApprovePhoto/" + id)
+        .put("https://capstoneprojectapi20210418160622.azurewebsites.net/api/v1/User/ApprovePhoto/" + id)
         .then((response) => {
           if (response.status == 200) {
             this.confirmModal = true;
@@ -407,7 +407,7 @@ export default {
     rejectPhoto(dataId, rejectReason, rejectDescription) {
       this.rejectModal = false;
       axios
-        .put("https://imago.azurewebsites.net/api/v1/User/DeniedPhoto", {
+        .put("https://capstoneprojectapi20210418160622.azurewebsites.net/api/v1/User/DeniedPhoto", {
           id: dataId,
           reason: rejectReason,
           description: rejectDescription,
@@ -431,7 +431,7 @@ export default {
     checkSimilarPhoto(id) {
       axios
         .get(
-          "https://imago.azurewebsites.net/api/v1/Photo/GetSimilarPhoto/" + id
+          "https://capstoneprojectapi20210418160622.azurewebsites.net/api/v1/Photo/GetSimilarPhoto/" + id
         )
         .then((response) => {
           if (response.status == 200) {
@@ -464,7 +464,7 @@ export default {
       this.$router.push('/unauthorized');
     } else {
     axios
-      .get("https://imago.azurewebsites.net/api/v1/Photo/getToApprove")
+      .get("https://capstoneprojectapi20210418160622.azurewebsites.net/api/v1/Photo/getToApprove")
       .then((response) => {
         this.rows = response.data;
         console.log(response);

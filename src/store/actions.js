@@ -2,7 +2,7 @@ import axios from "axios";
 
 export const getImages = ({ commit }) => {
     axios
-        .get("https://imago.azurewebsites.net/api/v1/Photo/random")
+        .get("https://capstoneprojectapi20210418160622.azurewebsites.net/api/v1/Photo/random")
         .then((response) => {
             commit("SET_IMAGES", response.data);
         });
@@ -10,7 +10,7 @@ export const getImages = ({ commit }) => {
 
 export const getImage = ({ commit }, photoId) => {
     axios
-        .get(`https://imago.azurewebsites.net/api/v1/Photo/${photoId}`)
+        .get(`https://capstoneprojectapi20210418160622.azurewebsites.net/api/v1/Photo/${photoId}`)
         .then((response) => {
             commit("SET_IMAGE", response.data);
         });
@@ -28,7 +28,7 @@ export const login = ({ commit }, user) => {
     return new Promise((resolve, reject) => {
         commit("auth_request");
         axios({
-                url: "https://imago.azurewebsites.net/api/v1/Auth",
+                url: "https://capstoneprojectapi20210418160622.azurewebsites.net/api/v1/Auth",
                 data: user,
                 method: "POST",
             })
@@ -53,7 +53,7 @@ export const register = ({ commit }, user) => {
     return new Promise((resolve, reject) => {
         commit("auth_request");
         axios({
-                url: "https://imago.azurewebsites.net/api/v1/Auth/Register",
+                url: "https://capstoneprojectapi20210418160622.azurewebsites.net/api/v1/Auth/Register",
                 data: user,
                 method: "POST",
             })

@@ -1,5 +1,9 @@
 <template>
-  <div class="card shadow" style="padding: 10px" :class="type === 'dark' ? 'bg-default' : ''">
+  <div
+    class="card shadow"
+    style="padding: 10px"
+    :class="type === 'dark' ? 'bg-default' : ''"
+  >
     <div
       class="card-header border-0"
       :class="type === 'dark' ? 'bg-transparent' : ''"
@@ -13,7 +17,9 @@
       </div>
     </div>
 
-    <div style="text-align: center"><h2>Pending Uploads</h2></div>
+    <div style="text-align: center">
+      <h2 style="font-size: 25px; font-family: 'Roboto'">Pending Uploads</h2>
+    </div>
     <br />
 
     <vue-good-table
@@ -25,51 +31,108 @@
       :columns="columns"
       :fixed-header="true"
       @on-row-click="onRowClick"
+      styleClass="vgt-table"
     >
       <div slot="emptystate">No pending uploads available.</div>
 
       <template slot="table-row" slot-scope="props">
         <!-- Customize Photo column -->
         <span v-if="props.column.field == 'wmlink'">
-          <img width="200px" height="150px" :src="props.row.wmlink" />
+          <img
+            class="img-fit"
+            width="600px"
+            height="400px"
+            :src="props.row.wmlink"
+          />
         </span>
 
-        <!-- Customize Type column -->
-        <span v-else-if="props.column.field == 'typeId'">
-          <p v-if="props.row.typeId == '1'">Non-Exclusive</p>
-          <p v-if="props.row.typeId == '1'">{{ props.row.photoId }}</p>
-          <p v-else-if="props.row.typeId == '2'">Exclusive</p>
-        </span>
+        <p
+          v-else-if="props.column.field == 'similarPhoto'"
+          style="text-align: center; margin-top: 150%"
+        >
+          <span
+            v-if="props.row.similarPhoto == null"
+            style="
+              border-radius: 70px;
+              border: 12px solid #32cd32;
+              background-color: #32cd32;
+              color: white;
+              font-size: 18px;
+              font-family: 'Roboto';
+            "
+          >
+            Undetected
+          </span>
+          <span
+            v-else-if="props.row.similarPhoto != null"
+            style="
+              border-radius: 70px;
+              border: 12px solid #dc143c;
+              background-color: #dc143c;
+              color: white;
+              font-size: 18px;
+              font-family: 'Roboto';
+            "
+          >
+            Detected
+          </span>
+        </p>
 
-        <span v-else>
+        <div v-else-if="props.column.field == 'photoName'">
+          <p style="font-size: 22px; font-family: 'Roboto'">
+            Photo Name: {{ props.row.photoName }}
+          </p>
+          <p style="font-size: 22px; font-family: 'Roboto'">
+            Photo ID: {{ props.row.photoId }}
+          </p>
+          <p
+            v-if="props.row.typeId == '1'"
+            style="font-size: 22px; font-family: 'Roboto'"
+          >
+            License Type: Casual
+          </p>
+          <p
+            v-else-if="props.row.typeId == '2'"
+            style="font-size: 22px; font-family: 'Roboto'"
+          >
+            License Type: Exclusive
+          </p>
+          <p style="font-size: 22px; font-family: 'Roboto'">
+            Description: {{ props.row.description }}
+          </p>
+          <p style="font-size: 22px; font-family: 'Roboto'">Categories:</p>
+          <div
+            style="font-size: 25px; font-family: 'Roboto'"
+            v-for="item in props.row.category"
+            :key="item"
+          >
+            <span class="badge badge-pill badge-info">{{
+              item.categoryName
+            }}</span>
+          </div>
+          <br />
+        </div>
+
+        <div v-else>
           {{ props.formattedRow[props.column.field] }}
-        </span>
+        </div>
       </template>
     </vue-good-table>
 
-    <Modal v-model="showModal" title="Upload Details" v-bind="dataModal">
+    <Modal v-model="detailsModal" title="Upload Details" v-bind="dataModal">
       <h3 style="text-align: center" v-bind="user">
         User: {{ user.fullName }}
       </h3>
       <h3 style="text-align: center" v-bind="user">Email: {{ user.email }}</h3>
-      <!-- <ImageLazy
-        class="photo"
-        :src="dataModal.wmlink"
-        :srcset="dataModal.wmlink"
-        baseClass="image-lazy"
-        deferredClass="image-lazy-deferred"
-        loadingClass="image-lazy-loading"
-        loadedClass="image-lazy-loaded"
-        :delay="0"
-        @loading="loading = true"
-        @load="loaded = true"
-      /> -->
 
       <img
         :src="dataModal.wmlink"
         @click="openGallery(0)"
         style="height: 400px; width: 470px; cursor: pointer"
       />
+      <h4 style="text-align: center; padding: 15px">
+        Click on image for full size
+      </h4>
 
       <LightBox
         ref="lightbox"
@@ -87,26 +150,144 @@
       </LightBox>
 
       <div class="ph-container">
-        <div class="ph-float">
-          <a
-            v-on:click="approvePhoto(dataModal.photoId)"
-            class="ph-button ph-btn-green"
-            >Approve</a
-          >
-        </div>
-        <div class="ph-float">
-          <a v-on:click="openRejectModal()" class="ph-button ph-btn-red"
-            >Reject</a
-          >
-        </div>
+        <button
+          class="btn btn-success"
+          style="margin-left: 55px; width: 150px"
+          v-on:click="approvePhoto(dataModal.photoId)"
+        >
+          <span class="text-nowrap">Approve</span>
+        </button>
+        <button
+          class="btn btn-danger"
+          style="margin-left: 55px; width: 150px"
+          v-on:click="openRejectModal()"
+        >
+          <span class="text-nowrap">Reject</span>
+        </button>
       </div>
       <div class="ph-clear"></div>
     </Modal>
 
     <Modal
+      v-model="chkSimilarModal"
+      title="Similar Details"
+      v-bind="chkSimilar"
+      enableClose="false"
+      :modal-style="{ 'max-width': '85%' }"
+    >
+      <h2
+        style="
+          text-align: center;
+          padding: 10px;
+          margin-left: auto;
+          margin-right: auto;
+          display: block;
+        "
+      >
+        Detected Photo With Similarity!
+        <i class="fa fa-exclamation-circle" aria-hidden="true"></i>
+      </h2>
+      <div style="height: 520px; display: flex">
+        <div style="width: 45%; margin: auto">
+          <h2 style="text-align: center">Current Photo</h2>
+          <h3 style="text-align: center" v-bind="dataModal">
+            Photo Name: {{ dataModal.photoName }}
+          </h3>
+
+          <img
+            :src="dataModal.wmlink"
+            @click="openGallery(0)"
+            style="
+              height: 400px;
+              width: 470px;
+              cursor: pointer;
+              margin-left: auto;
+              margin-right: auto;
+              display: block;
+            "
+          />
+          <h4 style="text-align: center; padding: 10px">
+            Click on image for full size
+          </h4>
+
+          <LightBox
+            ref="lightbox"
+            :showLightBox="false"
+            :showThumbs="false"
+            :media="[
+              {
+                thumb: dataModal.wmlink,
+                src: dataModal.wmlink,
+                srcset: dataModal.wmlink,
+              },
+            ]"
+          >
+            <inner-image-zoom
+              :src="dataModal.wmlink"
+              :zoomSrc="dataModal.wmlink"
+            />
+          </LightBox>
+        </div>
+
+        <div style="width: 45%; margin: auto">
+          <h2 style="text-align: center">Similarity Target</h2>
+          <h3 style="text-align: center">
+            Photo Name: {{ chkSimilar.photoName }}
+          </h3>
+
+          <img
+            :src="chkSimilar.wmlink"
+            @click="openGallery(0)"
+            style="
+              height: 400px;
+              width: 470px;
+              cursor: pointer;
+              margin-left: auto;
+              margin-right: auto;
+              display: block;
+            "
+          />
+          <h4 style="text-align: center; padding: 10px">
+            Click on image for full size
+          </h4>
+
+          <LightBox
+            ref="lightbox"
+            :showLightBox="false"
+            :showThumbs="false"
+            :media="[
+              {
+                thumb: chkSimilar.wmlink,
+                src: chkSimilar.wmlink,
+                srcset: chkSimilar.wmlink,
+              },
+            ]"
+          >
+            <inner-image-zoom
+              :src="chkSimilar.wmlink"
+              :zoomSrc="chkSimilar.wmlink"
+            />
+          </LightBox>
+        </div>
+      </div>
+      <button
+        class="btn btn-danger"
+        style="
+          width: 150px;
+          margin-left: auto;
+          margin-right: auto;
+          display: block;
+        "
+        v-on:click="rejectPhoto(dataModal.photoId, 'Similarity Rejection', 'Your photo was detected to have many similarity with this photo: '+ chkSimilar.wmlink)"
+      >
+        <span class="text-nowrap">Reject</span>
+      </button>
+    </Modal>
+
+    <Modal
       v-model="confirmModal"
-      title="Success"
-      style="height: 500px"
+      title="Result"
+      style="height: 500px; margin: auto"
       v-bind="msg"
     >
       <h3 style="text-align: center">{{ msg }}</h3>
@@ -119,7 +300,13 @@
             text-align: center;
           "
         >
-          <a href="/maps" class="ph-button ph-btn-green">OK</a>
+          <div
+            class="btn btn-success"
+            style="width: 150px"
+            @click="reloadPage()"
+          >
+            OK
+          </div>
         </div>
       </div>
     </Modal>
@@ -128,14 +315,15 @@
       <h3 style="text-align: center">Reason for Rejection</h3>
 
       <v-select
-        v-model="selected"
+        v-model="reasons"
         :placeholder="rejectReasons[0].reportReason"
         label="reportReason"
         :options="rejectReasons"
+        :searchable="false"
       ></v-select>
-
       <br />
       <textarea
+        v-model="rejectDesc"
         style="margin-left: 60px; width: 350px; height: 150px"
         placeholder="Details about the problem..."
       ></textarea>
@@ -149,11 +337,15 @@
             text-align: center;
           "
         >
-          <a
-            v-on:click="rejectPhoto(dataModal.photoId, selected.reportReason)"
-            class="ph-button ph-btn-green"
-            >OK</a
+          <button
+            class="btn btn-danger"
+            style="width: 150px"
+            v-on:click="
+              rejectPhoto(dataModal.photoId, reasons.reportReason, rejectDesc)
+            "
           >
+            <span class="text-nowrap">Reject</span>
+          </button>
         </div>
       </div>
     </Modal>
@@ -172,10 +364,13 @@ import("vue-it-bigger/dist/vue-it-bigger.min.css");
 import InnerImageZoom from "vue-inner-image-zoom";
 import vSelect from "vue-select";
 import "vue-select/dist/vue-select.css";
+// import modal from "@/components/Modal.vue";
 export default {
   components: {
+    // modal,
     VueGoodTable,
     Modal: VueModal,
+    // Unauthorized,
     //ImageLazy,
     LightBox,
     "inner-image-zoom": InnerImageZoom,
@@ -184,18 +379,23 @@ export default {
   data() {
     return {
       //model for reject reasons
-      selected: [],
+      reasons: [],
+      //model for reject desc
+      rejectDesc: [],
       //data for main Modal
       dataModal: [],
+      //model for chk similar
+      chkSimilar: [],
       //user data from each rows after click
       user: [],
       //msg for confirmModal
       msg: [],
       //select-box data for rejectModal
       rejectReasons: [],
-      showModal: false,
+      detailsModal: false,
       confirmModal: false,
       rejectModal: false,
+      chkSimilarModal: false,
       loading: false,
       loaded: false,
       //isLoading: false,
@@ -204,75 +404,58 @@ export default {
         {
           label: "Photo",
           field: "wmlink",
-          sortable: false,
-          width: "200px",
-        },
-        {
-          label: "Photo ID",
-          field: "photoId",
-          type: "number",
-          width: "150px",
           sortable: true,
+          width: "600px",
         },
         {
-          label: "Photo Name",
+          label: "Similarity Check",
+          field: "similarPhoto",
+          sortable: true,
+          sortFn: this.sortFn,
+          width: "150px",
+        },
+        {
+          label: "Photo Details",
           field: "photoName",
           type: "string",
           sortable: false,
         },
-        {
-          label: "Type",
-          field: "typeId",
-          type: "string",
-          width: "150px",
-          sortable: true,
-        },
-        {
-          label: "UserID",
-          field: "userId",
-          sortable: false,
-          hidden: true,
-        },
       ],
-      rows: [
-        // {
-        //   userId: "Abu",
-        //   photoName: "Alladin (1992)",
-        //   photoId: "Joe Grant",
-        //   type: "1",
-        //   wmLink:
-        //     "https://i.kym-cdn.com/photos/images/original/001/925/277/f22.png",
-        // },
-        // {
-        //   userId: "Magoc",
-        //   photoName: "Koelle (1992)",
-        //   photoId: "Mascintos",
-        //   type: "1",
-        //   wmLink:
-        //     "https://m.media-amazon.com/images/I/816CDZPqTyL._AC_SL1471_.jpg",
-        // },
-        // {
-        //   userId: "Temps",
-        //   photoName: "Erocv (1992)",
-        //   photoId: "Joe MOMO",
-        //   type: "1",
-        //   wmLink:
-        //     "https://i.kym-cdn.com/photos/images/original/001/925/277/f22.png",
-        // },
-      ],
+      rows: [],
     };
   },
+  computed: {
+    isLoggedIn() {
+      return this.$store.getters.isLoggedIn;
+    },
+  },
   methods: {
+    sortFn(x, y) {
+      // x - row1 value for column
+      // y - row2 value for column
+      // col - column being sorted
+      // rowX - row object for row1
+      // rowY - row object for row2
+      return x == null ? -1 : y == null ? 1 : 0;
+    },
+    reloadPage() {
+      window.location.reload();
+    },
     openGallery(index) {
       this.$refs.lightbox.showImage(index);
     },
     onRowClick(params) {
       //console.log(params.row);
       this.getUserId(params.row.userId);
-      this.dataModal = params.row;
-      this.showModal = true;
-      //console.log(this.imgData);
-      
+      //check similar photo first
+      if (params.row.similarPhoto != null) {
+        this.dataModal = params.row;
+        this.checkSimilarPhoto(params.row.similarPhoto);
+      } else {
+        this.dataModal = params.row;
+        this.detailsModal = true;
+      }
+
       // params.row - row object
       // params.pageIndex - index of this row on the current page.
       // params.selected - if selection is enabled this argument
@@ -281,7 +464,10 @@ export default {
     },
     getUserId(id) {
       axios
-        .get("https://imago.azurewebsites.net/api/v1/User/GetById/" + id)
+        .get(
+          "https://capstoneprojectapi20210418160622.azurewebsites.net/api/v1/User/GetById/" +
+            id
+        )
         .then((response) => {
           this.user = response.data;
           console.log(response);
@@ -292,26 +478,36 @@ export default {
     },
     getReportReasons() {
       axios
-        .get("https://imago.azurewebsites.net/api/v1/Report/GetAllReportReason")
+        .get(
+          "https://capstoneprojectapi20210418160622.azurewebsites.net/api/v1/Report/GetAllReportReason"
+        )
         .then((response) => {
           this.rejectReasons = response.data;
-          console.log(response);
+          //console.log(response);
         })
         .catch((error) => {
           console.log(error);
         });
     },
     closeModal() {
-      this.showModal = false;
+      //this.detailsModal = false;
+      if (this.detailsModal == true && this.chkSimilarModal == false) {
+        this.detailsModal = false;
+      } else if (this.detailsModal == true && this.chkSimilarModal == true) {
+        this.chkSimilarModal = false;
+      }
     },
     openRejectModal() {
-      this.showModal = false;
+      this.detailsModal = false;
       this.rejectModal = true;
     },
     approvePhoto(id) {
-      this.showModal = false;
+      this.detailsModal = false;
       axios
-        .put("https://imago.azurewebsites.net/api/v1/User/ApprovePhoto/" + id)
+        .put(
+          "https://capstoneprojectapi20210418160622.azurewebsites.net/api/v1/User/ApprovePhoto/" +
+            id
+        )
         .then((response) => {
           if (response.status == 200) {
             this.confirmModal = true;
@@ -328,13 +524,17 @@ export default {
           console.log(error);
         });
     },
-    rejectPhoto(dataId, dataReason) {
+    rejectPhoto(dataId, rejectReason, rejectDescription) {
       this.rejectModal = false;
       axios
-        .put("https://imago.azurewebsites.net/api/v1/User/DeniedPhoto", {
-          id: dataId,
-          reason: dataReason,
-        })
+        .put(
+          "https://capstoneprojectapi20210418160622.azurewebsites.net/api/v1/User/DeniedPhoto",
+          {
+            id: dataId,
+            reason: rejectReason,
+            description: rejectDescription,
+          }
+        )
         .then((response) => {
           if (response.status == 200) {
             this.confirmModal = true;
@@ -351,88 +551,33 @@ export default {
           console.log(error);
         });
     },
+    checkSimilarPhoto(photo) {
+      this.chkSimilar = photo;
+      this.chkSimilarModal = true;
+    },
   },
   mounted: function () {
     //preload reasons for v-select component or crash the web
     this.getReportReasons();
-    axios
-      .get("https://imago.azurewebsites.net/api/v1/Photo/getToApprove")
-      .then((response) => {
-        this.rows = response.data;
-        console.log(response);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    let isLoggedIn = this.$store.getters.isLoggedIn;
+    if (isLoggedIn == false) {
+      this.$router.push("/unauthorized");
+    } else {
+      axios
+        .get(
+          "https://capstoneprojectapi20210418160622.azurewebsites.net/api/v1/Photo/getToApprove"
+        )
+        .then((response) => {
+          this.rows = response.data;
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
   },
 };
 </script>
 <style>
-image-lazy {
-  opacity: 0;
-}
-.image-lazy-loading {
-  filter: blur(5px);
-  transform: translateY(1rem);
-  width: 29.6em;
-  height: 25em;
-  padding-right: 5px;
-}
-.image-lazy-loaded {
-  transition: opacity 2s ease, transform 1s ease, filter 1s ease;
-  opacity: 1;
-  transform: none;
-  filter: none;
-  width: 29.6em;
-  height: 25em;
-  padding-right: 5px;
-}
-.ph-button {
-  width: 9em;
-  border-style: solid;
-  border-width: 0px 0px 3px;
-  box-shadow: 0 -1px 0 rgba(255, 255, 255, 0.1) inset;
-  color: #ffffff;
-  border-radius: 6px;
-  cursor: pointer;
-  display: inline-block;
-  font-style: normal;
-  overflow: hidden;
-  text-align: center;
-  text-decoration: none;
-  text-overflow: ellipsis;
-  transition: all 200ms ease-in-out 0s;
-  white-space: nowrap;
-  font-family: "Gotham Rounded A", "Gotham Rounded B", Helvetica, Arial,
-    sans-serif;
-  font-weight: 700;
-  padding: 19px 39px 18px;
-  font-size: 18px;
-}
-.ph-btn-green {
-  border-color: #3ac162;
-  background-color: #5fcf80;
-}
-.ph-btn-green:hover {
-  color: blanchedalmond;
-}
-.ph-btn-green:focus,
-.ph-btn-green:active {
-  background-color: #4bc970;
-  border-color: #3ac162;
-}
-.ph-btn-red {
-  background-color: #ed5a5a !important;
-  border-color: #ea4343 !important;
-}
-.ph-btn-red:hover {
-  color: blanchedalmond;
-}
-.ph-btn-red:focus,
-.ph-btn-red:active {
-  background: none repeat scroll 0 0 #eb4848 !important;
-  border-color: #e83131 !important;
-}
 .ph-container {
   margin: 0 auto;
   display: inline;
@@ -442,7 +587,7 @@ image-lazy {
   float: left;
   width: 40%;
   padding-left: 65px;
-  padding-top: 35px;
+  padding-top: 25px;
   text-align: center;
 }
 
