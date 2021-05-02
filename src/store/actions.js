@@ -28,11 +28,14 @@ export const login = ({ commit }, user) => {
     return new Promise((resolve, reject) => {
         commit("auth_request");
         axios({
-                url: "https://capstoneprojectapi20210418160622.azurewebsites.net/api/v1/Auth",
-                data: user,
-                method: "POST",
-            })
+            url: "https://capstoneprojectapi20210418160622.azurewebsites.net/api/v1/Auth",
+            data: user,
+            method: "POST",
+        })
             .then((resp) => {
+                if (resp.data.role == "User"){
+                    this.$router.push("/dashboard");
+                }
                 const token = resp.data.token;
                 const user = resp.data;
                 window.localStorage.setItem("token", token);
@@ -53,10 +56,10 @@ export const register = ({ commit }, user) => {
     return new Promise((resolve, reject) => {
         commit("auth_request");
         axios({
-                url: "https://capstoneprojectapi20210418160622.azurewebsites.net/api/v1/Auth/Register",
-                data: user,
-                method: "POST",
-            })
+            url: "https://capstoneprojectapi20210418160622.azurewebsites.net/api/v1/Auth/Register",
+            data: user,
+            method: "POST",
+        })
             .then((resp) => {
                 const token = resp.data.token;
                 const user = resp.data;

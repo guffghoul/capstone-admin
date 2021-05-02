@@ -156,7 +156,7 @@ export default {
           .catch(
             (err) => (
               console.log(err),
-              alert("The username and / or password is incorrect")
+              alert("Please check your username and / or password!")
             )
           );
         this.$store.dispatch("auth");
