@@ -57,7 +57,7 @@ export default {
     validateCateName(value) {
       this.listCate.forEach((element) => {
         if (value.toLowerCase() == element.categoryName.toLowerCase()) {
-          console.log('checked')
+          console.log('checked ' + element.categoryName.toLowerCase());
           this.msg['cateName'] = "This category name already existed!";
         } else {
           this.msg['cateName'] = "";
