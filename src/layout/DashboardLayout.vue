@@ -15,13 +15,13 @@
           }"
         />
 
-        <!-- <sidebar-item
+        <sidebar-item
           :link="{
-            name: 'Reports',
+            name: 'Create Category',
             icon: 'ni ni-bullet-list-67 text-red',
-            path: '/tables',
+            path: '/categories',
           }"
-        /> -->
+        />
         <!-- <sidebar-item :link="{name: 'Icons', icon: 'ni ni-planet text-blue', path: '/icons'}"/>
         <sidebar-item :link="{name: 'Maps', icon: 'ni ni-pin-3 text-orange', path: '/maps'}"/>
         <sidebar-item :link="{name: 'User Profile', icon: 'ni ni-single-02 text-yellow', path: '/profile'}"/>

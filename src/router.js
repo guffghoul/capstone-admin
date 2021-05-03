@@ -62,6 +62,12 @@ export default new Router({
                     name: 'tables',
                     component: () =>
                         import( /* webpackChunkName: "demo" */ './views/Tables.vue')
+                },
+                {
+                    path: '/categories',
+                    name: 'categories',
+                    component: () =>
+                        import('./views/Categories.vue')
                 }
             ]
         },

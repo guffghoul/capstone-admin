@@ -364,7 +364,6 @@ import("vue-it-bigger/dist/vue-it-bigger.min.css");
 import InnerImageZoom from "vue-inner-image-zoom";
 import vSelect from "vue-select";
 import "vue-select/dist/vue-select.css";
-// import modal from "@/components/Modal.vue";
 export default {
   components: {
     // modal,

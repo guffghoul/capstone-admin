@@ -13,95 +13,89 @@
       </div>
     </div>
 
-    <div><h3 style="padding-left: 3em">Pending Uploads</h3></div>
+    <div style="text-align: center">
+      <h2 style="font-size: 25px; font-family: 'Roboto'">Create Categories</h2>
+    </div>
     <br />
 
-    <mdb-container>
-      <mdb-datatable-2 v-model="data" striped bordered arrows :display="2" hover>
-        
-      </mdb-datatable-2>
-    </mdb-container>
-
-    <!-- <div
-      class="card-footer d-flex justify-content-end"
-      :class="type === 'dark' ? 'bg-transparent' : ''"
-    >
-      <base-pagination total="30"></base-pagination>
-    </div> -->
+    <form role="form" @submit.prevent="createCategory" style="width: 50%; height: 150px; margin: auto">
+      <base-input
+        v-model="cateName"
+        alternative
+        class="mb-3"
+        placeholder="New Category Name"
+        addon-left-icon="ni ni-circle-08"
+      >
+      </base-input>
+      <span style="color: red" v-if="msg.cateName">{{ msg.cateName }}</span>
+      <div class="row justify-content-center">
+        <button class="btn btn-success" style="width: 150px">
+          <span class="text-nowrap">Create</span>
+        </button>
+      </div>
+    </form>
   </div>
 </template>
 
 <script>
-import { mdbDatatable2, mdbContainer } from "mdbvue";
+import axios from "axios";
 export default {
-  name: "projects-table",
-  components: {
-    mdbDatatable2,
-    mdbContainer,
-  },
   data() {
     return {
-      data: {
-        rows: [],
-        columns: [],
-      },
+      cateName: "",
+      listCate: [],
+      msg: [],
     };
   },
-  methods: {
-    filterData(dataArr, keys) {
-      let data = dataArr.map((entry) => {
-        let filteredEntry = {};
-        keys.forEach((key) => {
-          if (key in entry) {
-            filteredEntry[key] = entry[key];
-          }
-        });
-        return filteredEntry;
-      });
-      return data;
+  watch: {
+    cateName(value) {
+      this.cateName = value;
+      this.validateCateName(value);
     },
   },
-  mounted() {
-    fetch("https://capstonerestapi.azurewebsites.net/api/v1/Photo/getToApprove")
-      .then((res) => res.json())
-      .then((json) => {
-        let keys = ["photoId", "photoName", "userId"];
-        let entries = this.filterData(json, keys);
-        //
-        console.log(entries);
-        entries.forEach((item) => {
-          fetch(
-            "https://capstonerestapi.azurewebsites.net/api/v1/User/GetById/"+item.userId
-          )
-            .then((res) => res.json())
-            .then((json) => {
-              console.log(json);
-              let keys = ["username", "fullName"];
-              let names = this.filterData(json, keys);
-              console.log(names);
-              if (item.userId == names.userId) {
-                item.userId = names.fullname;
-              }
-              //console.log(item);
-            });
-        });
-        //
-        //columns
-        const columns = keys.map((key) => {
-          return {
-            label: key.toUpperCase(),
-            field: key,
-            sort: true,
-          };
-        });
-        //rows
+  methods: {
+    validateCateName(value) {
+      this.listCate.forEach((element) => {
+        if (value.toLowerCase() == element.categoryName.toLowerCase()) {
+          console.log('checked')
+          this.msg['cateName'] = "This category name already existed!";
+        } else {
+          this.msg['cateName'] = "";
+        }
+      });
+    },
 
-        this.data = {
-          columns,
-          rows: entries,
-        };
-      })
-      .catch((err) => console.log(err));
+    createCategory() {
+      let name = this.cateName;
+      axios
+        .post(
+          "https://capstoneprojectapi20210418160622.azurewebsites.net/api/v1/Category",
+          {
+            categoryName: name,
+            description: "",
+          }
+        )
+        .then((response) => {
+          console.log(response);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+  },
+  mounted: function () {
+    let isLoggedIn = this.$store.getters.isLoggedIn;
+    if (isLoggedIn == false) {
+      this.$router.push("/unauthorized");
+    } else {
+      axios
+        .get(
+          "https://capstoneprojectapi20210418160622.azurewebsites.net/api/v1/Category"
+        )
+        .then((response) => {
+          this.listCate = response.data;
+        });
+    }
   },
 };
 </script>
