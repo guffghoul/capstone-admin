@@ -119,53 +119,105 @@
       </template>
     </vue-good-table>
 
-    <Modal v-model="detailsModal" title="Upload Details" v-bind="dataModal">
-      <h3 style="text-align: center" v-bind="user">
-        User: {{ user.fullName }}
-      </h3>
-      <h3 style="text-align: center" v-bind="user">Email: {{ user.email }}</h3>
+    <Modal
+      v-model="detailsModal"
+      title="Upload Details"
+      v-bind="dataModal"
+      :modal-style="{ 'max-width': '65%' }"
+    >
+      <div style="height: 520px; display: flex">
+        <div style="width: 45%; margin: auto">
+          <img
+            :src="dataModal.wmlink"
+            @click="openGallery(0)"
+            style="height: 400px; width: 470px; cursor: pointer"
+          />
+          <h4 style="text-align: center; padding: 15px">
+            Click on image for full size
+          </h4>
 
-      <img
-        :src="dataModal.wmlink"
-        @click="openGallery(0)"
-        style="height: 400px; width: 470px; cursor: pointer"
-      />
-      <h4 style="text-align: center; padding: 15px">
-        Click on image for full size
-      </h4>
+          <LightBox
+            ref="lightbox"
+            :showLightBox="false"
+            :showThumbs="false"
+            :media="[
+              {
+                thumb: dataModal.wmlink,
+                src: dataModal.wmlink,
+                srcset: dataModal.wmlink,
+              },
+            ]"
+          >
+            <inner-image-zoom
+              :src="dataModal.wmlink"
+              :zoomSrc="dataModal.wmlink"
+            />
+          </LightBox>
+        </div>
 
-      <LightBox
-        ref="lightbox"
-        :showLightBox="false"
-        :showThumbs="false"
-        :media="[
-          {
-            thumb: dataModal.wmlink,
-            src: dataModal.wmlink,
-            srcset: dataModal.wmlink,
-          },
-        ]"
-      >
-        <inner-image-zoom :src="dataModal.wmlink" :zoomSrc="dataModal.wmlink" />
-      </LightBox>
-
-      <div class="ph-container">
-        <button
-          class="btn btn-success"
-          style="margin-left: 55px; width: 150px"
-          v-on:click="approvePhoto(dataModal.photoId)"
+        <div
+          style="
+            width: 45%;
+            text-align: left;
+            padding-left: 50px;
+            padding-top: 25px;
+          "
         >
-          <span class="text-nowrap">Approve</span>
-        </button>
-        <button
-          class="btn btn-danger"
-          style="margin-left: 55px; width: 150px"
-          v-on:click="openRejectModal()"
-        >
-          <span class="text-nowrap">Reject</span>
-        </button>
+          <p style="font-size: 22px; font-family: 'Roboto'" v-bind="user">
+            User: {{ user.fullName }}
+          </p>
+          <p style="font-size: 22px; font-family: 'Roboto'" v-bind="user">
+            Email: {{ user.email }}
+          </p>
+          <p style="font-size: 22px; font-family: 'Roboto'">
+            Photo Name: {{ dataModal.photoName }}
+          </p>
+          <p
+            v-if="dataModal.typeId == '1'"
+            style="font-size: 22px; font-family: 'Roboto'"
+          >
+            License Type: Casual
+          </p>
+          <p
+            v-else-if="dataModal.typeId == '2'"
+            style="font-size: 22px; font-family: 'Roboto'"
+          >
+            License Type: Exclusive
+          </p>
+          <p style="font-size: 22px; font-family: 'Roboto'">
+            Price: {{dataModal.price}}
+          </p>
+          <p style="font-size: 22px; font-family: 'Roboto'">
+            Description: {{ dataModal.description }}
+          </p>
+          <p style="font-size: 22px; font-family: 'Roboto'">Categories:</p>
+          <div
+            style="font-size: 25px; font-family: 'Roboto'; margin-left: 40%; margin-top: -50px; margin-bottom: 15%;"
+            v-for="item in dataModal.category"
+            :key="item"
+          >
+            <span class="badge badge-pill badge-info">{{
+              item.categoryName
+            }}</span>
+          </div>
+          <div style="margin-top: -5%">
+            <button
+              class="btn btn-success"
+              style="width: 150px"
+              v-on:click="approvePhoto(dataModal.photoId)"
+            >
+              <span class="text-nowrap">Approve</span>
+            </button>
+            <button
+              class="btn btn-danger"
+              style="margin-left: 25px; width: 150px"
+              v-on:click="openRejectModal()"
+            >
+              <span class="text-nowrap">Reject</span>
+            </button>
+          </div>
+        </div>
       </div>
-      <div class="ph-clear"></div>
     </Modal>
 
     <Modal
@@ -278,7 +330,14 @@
           margin-right: auto;
           display: block;
         "
-        v-on:click="rejectPhoto(dataModal.photoId, 'Similarity Rejection', 'Your photo was detected to have many similarity with this photo: '+ chkSimilar.wmlink)"
+        v-on:click="
+          rejectPhoto(
+            dataModal.photoId,
+            'Similarity Rejection',
+            'Your photo was detected to have many similarity with this photo: ' +
+              chkSimilar.wmlink
+          )
+        "
       >
         <span class="text-nowrap">Reject</span>
       </button>
