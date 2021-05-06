@@ -125,7 +125,7 @@
       v-bind="dataModal"
       :modal-style="{ 'max-width': '65%' }"
     >
-      <div style="height: 520px; display: flex">
+      <div style="height: 580px; display: flex">
         <div style="width: 45%; margin: auto">
           <img
             :src="dataModal.wmlink"
@@ -185,14 +185,20 @@
             License Type: Exclusive
           </p>
           <p style="font-size: 22px; font-family: 'Roboto'">
-            Price: {{dataModal.price}}
+            Price: {{ dataModal.price }} $
           </p>
           <p style="font-size: 22px; font-family: 'Roboto'">
             Description: {{ dataModal.description }}
           </p>
           <p style="font-size: 22px; font-family: 'Roboto'">Categories:</p>
           <div
-            style="font-size: 25px; font-family: 'Roboto'; margin-left: 40%; margin-top: -50px; margin-bottom: 15%;"
+            style="
+              font-size: 25px;
+              font-family: 'Roboto';
+              margin-left: 40%;
+              margin-top: -50px;
+              margin-bottom: 15%;
+            "
             v-for="item in dataModal.category"
             :key="item"
           >
@@ -322,6 +328,19 @@
           </LightBox>
         </div>
       </div>
+      <div style="display: flex">
+      <button
+        class="btn btn-success"
+        style="
+          width: 150px;
+          margin-left: auto;
+          margin-right: auto;
+          display: block;
+        "
+        v-on:click="resolveModal(dataModal)"
+      >
+        <span class="text-nowrap">Resolve</span>
+      </button>
       <button
         class="btn btn-danger"
         style="
@@ -341,6 +360,7 @@
       >
         <span class="text-nowrap">Reject</span>
       </button>
+      </div>
     </Modal>
 
     <Modal
@@ -502,6 +522,11 @@ export default {
     openGallery(index) {
       this.$refs.lightbox.showImage(index);
     },
+    resolveModal(data) {
+      this.chkSimilarModal = false;
+      this.dataModal = data;
+      this.detailsModal = true;
+    },
     onRowClick(params) {
       //console.log(params.row);
       this.getUserId(params.row.userId);
@@ -584,6 +609,15 @@ export default {
     },
     rejectPhoto(dataId, rejectReason, rejectDescription) {
       this.rejectModal = false;
+      // if (rejectReason == null) {
+      //   rejectReason = this.rejectReasons[0].reportReason;
+      // }
+      // if (rejectDescription.length == 0) {
+      //   rejectDescription.push("None");
+      // }
+      // console.log(dataId);
+      // console.log(rejectReason);
+      // console.log(rejectDescription);
       axios
         .put(
           "https://capstoneprojectapi20210418160622.azurewebsites.net/api/v1/User/DeniedPhoto",

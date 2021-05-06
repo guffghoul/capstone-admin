@@ -57,13 +57,13 @@
             </template>
           </card>
           <div class="row mt-3">
-            <div class="col-6">
+            <!-- <div class="col-6">
               <router-link to="/requestchangepassword" title="Register">
                 <a href="#" style="color:#0886DE">
                   <small>Forgot password?</small>
                 </a>
               </router-link>
-            </div>
+            </div> -->
             <!-- <div class="col-6 text-right">
               <router-link to="/register" title="Register">
                  <a href="#" style="color:#0886DE">
