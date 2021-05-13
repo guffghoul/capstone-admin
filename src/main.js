@@ -24,10 +24,21 @@ import ArgonDashboard from './plugins/argon-dashboard'
 import Vuex from 'vuex'
 import VueSimpleAlert from "vue-simple-alert"
 
+import Axios from 'axios'
+
+Vue.prototype.$http = Axios;
+const token = localStorage.getItem('token')
+if (token) {
+  Vue.prototype.$http.defaults.headers.common['Authorization'] = "Bearer " + token
+}
+
 Vue.config.productionTip = false
 Vue.use(Vuex)
 Vue.use(ArgonDashboard)
 Vue.use(VueSimpleAlert)
+
+
+
 new Vue({
     router,
     store,
