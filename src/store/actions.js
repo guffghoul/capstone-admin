@@ -33,17 +33,15 @@ export const login = ({ commit }, user) => {
             method: "POST",
         })
             .then((resp) => {
-                console.log(resp);
-                if (resp.data.role == "User"){
-                    this.$router.push("/unauthorized");
-                }
+                // if (resp.data.role == "User"){
+                //     this.$router.push("/unauthorized");
+                // }
                 const token = resp.data.token;
-                console.log("token: " + token);
                 const user = resp.data;
                 window.localStorage.setItem("token", token);
                 window.localStorage.setItem("user", JSON.stringify(user));
                 axios.defaults.headers.common["Authorization"] = token;
-                commit("auth_success", user);
+                commit("auth_success", token, user);
                 resolve(resp);
             })
             .catch((err) => {
@@ -67,8 +65,7 @@ export const register = ({ commit }, user) => {
                 const user = resp.data;
                 localStorage.setItem("token", token);
                 axios.defaults.headers.common["Authorization"] = token;
-                commit("auth_success", user);
-
+                commit("auth_success", token, user);
                 resolve(resp);
             })
             .catch((err) => {

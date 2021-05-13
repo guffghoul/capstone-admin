@@ -49,9 +49,9 @@ router.post('/', async(req, res) => {
     try {
         result = await col.insertOne(transaction);
         // Find one document
-        result = await col.findOne();
+        // result = await col.findOne();
         // Print to the console
-        console.log(result);
+        // console.log(result);
         // Check version again
         result = await pdb.getVersion();
         console.log(`Version is now ${result.version}.`);

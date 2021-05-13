@@ -501,11 +501,11 @@ export default {
       rows: [],
     };
   },
-  computed: {
-    isLoggedIn() {
-      return this.$store.getters.isLoggedIn;
-    },
-  },
+  // computed: {
+  //   isLoggedIn() {
+  //     return this.$store.getters.isLoggedIn;
+  //   },
+  // },
   methods: {
     sortFn(x, y) {
       // x - row1 value for column
@@ -590,16 +590,16 @@ export default {
       //   width: 50,
       // });
       axios({
-        url: "http://localhost:3030/transactions",
+        url: "http://localhost:2000/transactions",
         data: {
-          transactionId: "none",
-          prevOwner: "none",
+          transactionId: 'none',
+          prevOwner: 'none',
           ownerID: this.dataModal.userId,
           photoId: this.dataModal.photoId,
           photoHash: this.dataModal.phash,
           isTransaction: false,
-          amount: 0,
-          createDate: Date.now(),
+          amount: '0',
+          createDate: new Date().toISOString(),
         },
         method: "POST",
         headers: { "Content-Type": "application/json" },

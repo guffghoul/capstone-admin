@@ -3,8 +3,8 @@
     class="section section-shaped section-lg my-0"
     style="background-image: url('img/theme/header-background.jpg')"
   >
-  <!-- Header -->
-  <div class="header py-7 py-lg-7">
+    <!-- Header -->
+    <div class="header py-7 py-lg-7">
       <div class="container">
         <div class="header-body text-center mb-6">
           <div class="row justify-content-center">
@@ -18,7 +18,7 @@
       </div>
     </div>
     <!-- Header -->
-    <div class="container" >
+    <div class="container">
       <div class="row justify-content-center">
         <div class="col-lg-5">
           <card
@@ -27,7 +27,7 @@
             header-classes="bg-white pb-5"
             body-classes="px-lg-5 py-lg-5"
             class="border-0"
-            style="background-color:#FFFFFF"
+            style="background-color: #ffffff"
           >
             <template>
               <div class="text-center text-muted mb-4">
@@ -82,12 +82,7 @@
           <div class="col-xl-6">
             <div class="copyright text-center text-xl-left text-muted">
               &copy; {{ year }}
-              <a
-                href=""
-                class="font-weight-bold ml-1"
-                target="_blank"
-                >IMAGO</a
-              >
+              <a href="" class="font-weight-bold ml-1" target="_blank">IMAGO</a>
             </div>
           </div>
           <!-- <div class="col-xl-6">
@@ -135,8 +130,7 @@
 </template>
 <script>
 export default {
-  components: {
-  },
+  components: {},
   data() {
     return {
       username: "",
@@ -152,23 +146,33 @@ export default {
       } else {
         this.$store
           .dispatch("login", { username, password })
-          .then(() => this.$router.push("/dashboard"))
+          // .then(() => this.$router.push("/dashboard"))
+          .then(() => {
+            var user = JSON.parse(localStorage.getItem("user"));
+            console.log("user: " + user);
+            if (user.role == "User") {
+              this.$store.dispatch("logout").then(() => {
+                this.$router.push("/unauthorized");
+              });
+            } else if (user.role == "Admin") {
+              this.$router.push("/dashboard");
+            }
+          })
           .catch(
             (err) => (
               console.log(err),
               alert("Please check your username and / or password!")
             )
           );
-        this.$store.dispatch("auth");
+        // this.$store.dispatch("auth");
       }
     },
   },
 };
 </script>
 <style scoped>
-.section{
+.section {
   height: 100%;
- 
 }
 
 .login-button {

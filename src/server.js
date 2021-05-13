@@ -26,5 +26,5 @@ app.get('/', (req, res) =>
 console.log(`Server is up!`);
 
 
-app.listen(3030);
+app.listen(2000);
 
