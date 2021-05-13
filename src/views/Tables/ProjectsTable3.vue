@@ -18,13 +18,22 @@
     </div>
     <br />
 
-    <form role="form" @submit.prevent="createCategory" style="width: 50%; height: 150px; margin: auto">
+    <form
+      role="form"
+      @submit.prevent="createCategory"
+      style="
+        width: 40%;
+        height: 450px;
+        margin: auto;
+        text-align: center;
+        padding-top: 10%;
+      "
+    >
       <base-input
         v-model="cateName"
         alternative
         class="mb-3"
         placeholder="New Category Name"
-        addon-left-icon="ni ni-circle-08"
       >
       </base-input>
       <span style="color: red" v-if="msg.cateName">{{ msg.cateName }}</span>
@@ -57,10 +66,10 @@ export default {
     validateCateName(value) {
       this.listCate.forEach((element) => {
         if (value.toLowerCase() == element.categoryName.toLowerCase()) {
-          console.log('checked ' + element.categoryName.toLowerCase());
-          this.msg['cateName'] = "This category name already existed!";
+          console.log("checked " + element.categoryName.toLowerCase());
+          this.msg["cateName"] = "This category name already existed!";
         } else {
-          this.msg['cateName'] = "";
+          this.msg["cateName"] = "";
         }
       });
     },
@@ -79,6 +88,7 @@ export default {
           console.log(response);
         })
         .catch((error) => {
+          alert("Category already exist!");
           console.log(error);
         });
     },
