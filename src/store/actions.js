@@ -33,10 +33,12 @@ export const login = ({ commit }, user) => {
             method: "POST",
         })
             .then((resp) => {
+                console.log(resp);
                 if (resp.data.role == "User"){
-                    this.$router.push("/dashboard");
+                    this.$router.push("/unauthorized");
                 }
                 const token = resp.data.token;
+                console.log("token: " + token);
                 const user = resp.data;
                 window.localStorage.setItem("token", token);
                 window.localStorage.setItem("user", JSON.stringify(user));
