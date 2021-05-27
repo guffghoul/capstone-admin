@@ -366,7 +366,6 @@ export default {
         .get("https://capstoneprojectapi20210418160622.azurewebsites.net/api/v1/Report/GetAllReportReason")
         .then((response) => {
           this.rejectReasons = response.data;
-          //console.log(response);
         })
         .catch((error) => {
           console.log(error);

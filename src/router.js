@@ -11,7 +11,7 @@ export default new Router({
     linkExactActiveClass: 'active',
     routes: [
         {
-            path: "/",
+            path: "/login",
             name: "login",
             components: {
                 default: Login,
@@ -69,7 +69,8 @@ export default new Router({
                     component: () =>
                         import('./views/Categories.vue')
                 }
-            ]
+            ],
+            
         },
         // {
         //     path: "/dashboard",

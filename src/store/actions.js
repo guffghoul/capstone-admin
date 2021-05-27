@@ -34,7 +34,8 @@ export const login = ({ commit }, user) => {
         })
             .then((resp) => {
                 if (resp.data.role == "User"){
-                    this.$router.push("/dashboard");
+                    this.$router.push("/");
+                  
                 }
                 const token = resp.data.token;
                 const user = resp.data;
@@ -43,6 +44,8 @@ export const login = ({ commit }, user) => {
                 axios.defaults.headers.common["Authorization"] = token;
                 commit("auth_success", user);
                 resolve(resp);
+                window.location.replace('/');
+                // window.location.reload();
             })
             .catch((err) => {
                 commit("auth_error");
