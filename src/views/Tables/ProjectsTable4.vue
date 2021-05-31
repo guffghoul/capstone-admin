@@ -329,37 +329,37 @@
         </div>
       </div>
       <div style="display: flex">
-      <button
-        class="btn btn-success"
-        style="
-          width: 150px;
-          margin-left: auto;
-          margin-right: auto;
-          display: block;
-        "
-        v-on:click="resolveModal(dataModal)"
-      >
-        <span class="text-nowrap">Resolve</span>
-      </button>
-      <button
-        class="btn btn-danger"
-        style="
-          width: 150px;
-          margin-left: auto;
-          margin-right: auto;
-          display: block;
-        "
-        v-on:click="
-          rejectPhoto(
-            dataModal.photoId,
-            'Similarity Rejection',
-            'Your photo was detected to have many similarity with this photo: ' +
-              chkSimilar.wmlink
-          )
-        "
-      >
-        <span class="text-nowrap">Reject</span>
-      </button>
+        <button
+          class="btn btn-success"
+          style="
+            width: 150px;
+            margin-left: auto;
+            margin-right: auto;
+            display: block;
+          "
+          v-on:click="resolveModal(dataModal)"
+        >
+          <span class="text-nowrap">Resolve</span>
+        </button>
+        <button
+          class="btn btn-danger"
+          style="
+            width: 150px;
+            margin-left: auto;
+            margin-right: auto;
+            display: block;
+          "
+          v-on:click="
+            rejectPhoto(
+              dataModal.photoId,
+              'Similarity Rejection',
+              'Your photo was detected to have many similarity with this photo: ' +
+                chkSimilar.wmlink
+            )
+          "
+        >
+          <span class="text-nowrap">Reject</span>
+        </button>
       </div>
     </Modal>
 
@@ -477,7 +477,6 @@ export default {
       loading: false,
       loaded: false,
       //isLoading: false,
-
       columns: [
         {
           label: "Photo",
@@ -502,11 +501,11 @@ export default {
       rows: [],
     };
   },
-  computed: {
-    isLoggedIn() {
-      return this.$store.getters.isLoggedIn;
-    },
-  },
+  // computed: {
+  //   isLoggedIn() {
+  //     return this.$store.getters.isLoggedIn;
+  //   },
+  // },
   methods: {
     sortFn(x, y) {
       // x - row1 value for column
@@ -585,26 +584,58 @@ export default {
       this.rejectModal = true;
     },
     approvePhoto(id) {
-      this.detailsModal = false;
-      axios
-        .put(
-          "https://capstoneprojectapi20210418160622.azurewebsites.net/api/v1/User/ApprovePhoto/" +
-            id
-        )
+      // let loader = this.$loading.show({
+      //   loader: "dots",
+      //   height: 50,
+      //   width: 50,
+      // });
+      axios({
+        url: "http://localhost:2000/transactions",
+        data: {
+          transactionId: 'none',
+          prevOwner: this.dataModal.photoName,
+          ownerID: this.dataModal.userId,
+          photoId: this.dataModal.photoId,
+          photoHash: this.dataModal.phash,
+          isTransaction: false,
+          amount: this.dataModal.price,
+          createDate: new Date().toISOString(),
+        },
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+      })
         .then((response) => {
           if (response.status == 200) {
-            this.confirmModal = true;
-            this.msg = "Photo Approved!";
-          } else {
-            this.confirmModal = true;
-            this.msg = "Error!";
+            this.detailsModal = false;
+            axios
+              .put(
+                "https://capstoneprojectapi20210418160622.azurewebsites.net/api/v1/User/ApprovePhoto/" +
+                  id
+              )
+              .then((resp) => {
+                if (resp.status == 200) {
+                  // loader.hide();
+                  this.confirmModal = true;
+                  this.msg = "Photo Approved!";
+                } else {
+                  // loader.hide();
+                  this.confirmModal = true;
+                  this.msg = "Error in approving photo!";
+                }
+                console.log(resp.status);
+              })
+              .catch((error) => {
+                // loader.hide();
+                this.confirmModal = true;
+                this.msg = error;
+              });
           }
-          console.log(response.status);
         })
         .catch((error) => {
+          // loader.hide();
+          console.log(error)
           this.confirmModal = true;
-          this.msg = error;
-          console.log(error);
+          this.msg = "Save to BC Error!";
         });
     },
     rejectPhoto(dataId, rejectReason, rejectDescription) {

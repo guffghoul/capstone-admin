@@ -11,7 +11,7 @@ export default new Router({
     linkExactActiveClass: 'active',
     routes: [
         {
-            path: "/login",
+            path: "/",
             name: "login",
             components: {
                 default: Login,
@@ -25,7 +25,7 @@ export default new Router({
         },
 
         {
-            path: '/',
+            path: '/dashboard',
             redirect: 'dashboard',
             component: DashboardLayout,
             children: [
