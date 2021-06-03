@@ -584,11 +584,11 @@ export default {
       this.rejectModal = true;
     },
     approvePhoto(id) {
-      // let loader = this.$loading.show({
-      //   loader: "dots",
-      //   height: 50,
-      //   width: 50,
-      // });
+      let loader = this.$loading.show({
+        loader: "dots",
+        height: 50,
+        width: 50,
+      });
       axios({
         url: "http://localhost:2000/transactions",
         data: {
@@ -614,31 +614,36 @@ export default {
               )
               .then((resp) => {
                 if (resp.status == 200) {
-                  // loader.hide();
+                  loader.hide();
                   this.confirmModal = true;
                   this.msg = "Photo Approved!";
                 } else {
-                  // loader.hide();
+                  loader.hide();
                   this.confirmModal = true;
                   this.msg = "Error in approving photo!";
                 }
                 console.log(resp.status);
               })
               .catch((error) => {
-                // loader.hide();
+                loader.hide();
                 this.confirmModal = true;
                 this.msg = error;
               });
           }
         })
         .catch((error) => {
-          // loader.hide();
+          loader.hide();
           console.log(error)
           this.confirmModal = true;
           this.msg = "Save to BC Error!";
         });
     },
     rejectPhoto(dataId, rejectReason, rejectDescription) {
+      let loader = this.$loading.show({
+        loader: "dots",
+        height: 50,
+        width: 50,
+      });
       this.rejectModal = false;
       // if (rejectReason == null) {
       //   rejectReason = this.rejectReasons[0].reportReason;
@@ -660,15 +665,18 @@ export default {
         )
         .then((response) => {
           if (response.status == 200) {
+            loader.hide();
             this.confirmModal = true;
             this.msg = "Photo Rejected!";
           } else {
+            loader.hide();
             this.confirmModal = true;
             this.msg = "Error!";
           }
-          console.log(response.status);
+          // console.log(response.status);
         })
         .catch((error) => {
+          loader.hide();
           this.confirmModal = true;
           this.msg = error;
           console.log(error);
