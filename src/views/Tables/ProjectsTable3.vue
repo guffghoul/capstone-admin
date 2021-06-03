@@ -86,6 +86,7 @@ export default {
         )
         .then((response) => {
           console.log(response);
+          alert("Create successfully!");
         })
         .catch((error) => {
           alert("Category already exist!");
