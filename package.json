@@ -44,6 +44,7 @@
     "vue-inner-image-zoom": "^1.0.1",
     "vue-it-bigger": "^0.1.1",
     "vue-js-modal": "^2.0.0-rc.6",
+    "vue-loading-overlay": "^3.4.2",
     "vue-router": "3.3.4",
     "vue-select": "^3.11.2",
     "vue-simple-alert": "^1.1.1",

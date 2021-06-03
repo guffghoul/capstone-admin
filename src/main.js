@@ -23,6 +23,8 @@ import './registerServiceWorker'
 import ArgonDashboard from './plugins/argon-dashboard'
 import Vuex from 'vuex'
 import VueSimpleAlert from "vue-simple-alert"
+import Loading from "vue-loading-overlay";
+import "vue-loading-overlay/dist/vue-loading.css";
 
 import Axios from 'axios'
 
@@ -34,6 +36,7 @@ if (token) {
 
 Vue.config.productionTip = false
 Vue.use(Vuex)
+Vue.use(Loading);
 Vue.use(ArgonDashboard)
 Vue.use(VueSimpleAlert)
 
