@@ -686,12 +686,18 @@ export default {
     if (isLoggedIn == false) {
       this.$router.push("/unauthorized");
     } else {
+      let loader = this.$loading.show({
+        loader: "dots",
+        height: 50,
+        width: 50,
+      });
       axios
         .get(
           "https://capstoneprojectapi20210418160622.azurewebsites.net/api/v1/Photo/getToApprove"
         )
         .then((response) => {
           this.rows = response.data;
+          loader.hide();
         })
         .catch((error) => {
           console.log(error);
