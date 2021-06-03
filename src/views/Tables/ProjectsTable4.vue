@@ -353,8 +353,7 @@
             rejectPhoto(
               dataModal.photoId,
               'Similarity Rejection',
-              'Your photo was detected to have many similarity with this photo: ' +
-                chkSimilar.wmlink
+              'Your photo was detected to have many similarity with the old photo before' 
             )
           "
         >
